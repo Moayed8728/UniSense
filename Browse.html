@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UniSense — Browse programmes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="unisense.css">
+<style>
+  .cat-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:14px;
+    margin-top:8px;
+  }
+  .cat-card{
+    background:var(--paper);
+    border:1px solid rgba(25,21,18,.06);
+    border-radius:16px;
+    padding:24px 22px;
+    cursor:pointer;
+    text-align:left;
+    display:flex; flex-direction:column; gap:14px;
+    min-height:170px;
+    position:relative;
+    overflow:hidden;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+    text-decoration:none; color:inherit;
+  }
+  .cat-card::before{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(135deg, var(--accent-tint), transparent 60%);
+    opacity:0;
+    transition:opacity .2s;
+  }
+  .cat-card:hover{
+    border-color: var(--accent);
+    box-shadow:
+      0 1px 2px rgba(25,21,18,.04),
+      0 18px 38px -22px rgba(192,0,0,.30);
+    transform: translateY(-2px);
+  }
+  .cat-card:hover::before{ opacity:1; }
+  .cat-card:hover .cat-arrow{ opacity:1; transform: translate(0,0); color:var(--accent); }
+
+  .cat-icon{
+    width:48px; height:48px; border-radius:12px;
+    background:#f4ede1;
+    color:var(--ink);
+    display:grid; place-items:center;
+    border:1px solid var(--line);
+    position:relative; z-index:1;
+    transition:background .2s, color .2s, border-color .2s;
+  }
+  .cat-card:hover .cat-icon{ background:#fff; color:var(--accent); border-color:rgba(192,0,0,.25);}
+  .cat-icon svg{width:22px;height:22px}
+
+  .cat-meta{ position:relative; z-index:1; flex:1; display:flex; flex-direction:column; gap:4px;}
+  .cat-name{
+    font-family:var(--serif);
+    font-size:22px;
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .cat-count{
+    font-size:13px; font-weight:600;
+    color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .cat-arrow{
+    position:absolute; right:18px; bottom:18px;
+    color:var(--muted-2);
+    opacity:.7; transition: all .2s;
+    transform: translate(-3px, 3px);
+  }
+
+  /* Featured (first row, larger spans) */
+  .cat-card.featured{ grid-column: span 2; min-height:200px;}
+  .cat-card.featured .cat-name{ font-size:30px;}
+  .cat-card.featured .cat-icon{ width:56px; height:56px; }
+  .cat-card.featured .cat-icon svg{ width:26px; height:26px;}
+
+  /* Counts dim a-z toolbar */
+  .browse-toolbar{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:22px;
+    padding:14px 18px;
+    background: var(--paper);
+    border: 1px solid rgba(25,21,18,.06);
+    border-radius:14px;
+  }
+  .browse-toolbar .total{
+    font-size:13px; color:var(--muted);
+  }
+  .browse-toolbar .total b{ color:var(--ink); font-weight:700;}
+  .browse-toolbar .order{
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--muted);
+  }
+  .browse-toolbar .order button{
+    appearance:none; border:1px solid var(--line); background:#fbf8f3;
+    padding:7px 12px; font:600 12px/1 var(--sans);
+    color:var(--ink-2); cursor:pointer; border-radius:7px;
+    display:inline-flex; align-items:center; gap:5px;
+  }
+  .browse-toolbar .order button.is-active{
+    background:var(--ink); color:#fff; border-color:var(--ink);
+  }
+
+  .browse-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    margin-bottom:24px;
+  }
+  .browse-head h1{
+    font-size:44px; letter-spacing:-0.02em; margin:0;
+  }
+  .browse-head .lede{ color:var(--muted); margin:6px 0 0; max-width:520px;}
+
+  @media (max-width: 1100px){ .cat-grid{ grid-template-columns: repeat(3,1fr);} }
+  @media (max-width: 800px){ .cat-grid{ grid-template-columns: repeat(2,1fr);} .cat-card.featured{ grid-column: span 2; } }
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div id="root"></div>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="browse.jsx"></script>
+</body>
+</html>

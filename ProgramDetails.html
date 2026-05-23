@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UniSense — BSc Computer Science</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="unisense.css">
+<style>
+  .pd-back{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; color:var(--muted);
+    text-decoration:none; margin-bottom:18px;
+    padding:6px 10px; border-radius:7px;
+    transition: color .15s, background .15s;
+  }
+  .pd-back:hover{ color:var(--ink); background:rgba(25,21,18,.05);}
+  .pd-back svg{width:14px;height:14px}
+
+  .pd-head{
+    background:var(--paper);
+    border:1px solid rgba(25,21,18,.06);
+    border-radius:22px;
+    padding:34px 36px 30px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(25,21,18,.04), 0 18px 40px -24px rgba(25,21,18,.18);
+    display:grid;
+    grid-template-columns: 80px 1fr auto;
+    gap:22px;
+    align-items:flex-start;
+  }
+  .pd-head .uni-mark{
+    width:80px; height:80px; border-radius:16px;
+    background:#22191b; color:#fff;
+    display:grid; place-items:center;
+    font-family:var(--serif); font-size:30px;
+    border:1px solid var(--line);
+  }
+  .pd-title{
+    font-family:var(--serif);
+    font-size:42px; line-height:1.05;
+    letter-spacing:-0.02em;
+    margin:6px 0 8px;
+    color:var(--ink);
+  }
+  .pd-uni{
+    font-size:15px; color:var(--ink-2); font-weight:500;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .pd-uni .country{ color:var(--muted);}
+  .pd-uni .views{
+    margin-left:auto;
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12px; color:var(--muted); font-weight:500;
+    padding:5px 9px; border-radius:7px; background:rgba(25,21,18,.04);
+  }
+  .pd-uni .views svg{width:12px;height:12px}
+  .pd-meta-chips{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin-top:14px;
+  }
+  .pd-meta-chips .chip{ font-size:12px; padding:5px 11px; border-radius:8px;}
+  .pd-actions{ display:flex; flex-direction:column; gap:8px; min-width:170px;}
+
+  .pd-body{
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:24px;
+    margin-top:24px;
+    align-items:flex-start;
+  }
+  .pd-main, .pd-side{
+    display:flex; flex-direction:column; gap:20px;
+  }
+  .pd-card{
+    background:var(--paper);
+    border:1px solid rgba(25,21,18,.06);
+    border-radius:18px;
+    padding:26px 28px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(25,21,18,.04);
+  }
+  .pd-card h2{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:22px;
+    margin:0 0 14px;
+    letter-spacing:-0.01em;
+  }
+  .pd-card p{ margin:0; color:var(--ink-2); line-height:1.65; font-size:14.5px;}
+
+  .info-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:0;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .info-grid .info{
+    padding:14px 16px;
+    display:flex; flex-direction:column; gap:3px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:#fbf8f3;
+  }
+  .info-grid .info:nth-child(2n){ border-right:0;}
+  .info-grid .info:nth-last-child(-n+2){ border-bottom:0;}
+  .info-grid .lbl{ font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);}
+  .info-grid .val{ font-size:15px; color:var(--ink); font-weight:600; display:flex; align-items:center; gap:8px;}
+  .info-grid .val svg{ width:14px; height:14px; color:var(--accent);}
+
+  .req-list{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .req-list li{
+    display:flex; align-items:flex-start; gap:12px;
+    font-size:14px; color:var(--ink-2); line-height:1.5;
+  }
+  .req-list li > span:first-child{
+    width:22px; height:22px; border-radius:50%;
+    background:var(--accent-tint); color:var(--accent);
+    display:grid; place-items:center; flex-shrink:0;
+    margin-top:1px;
+  }
+  .req-list li > span:first-child svg{ width:11px; height:11px;}
+  .req-list li b{ color:var(--ink); font-weight:600;}
+
+  .source-row{
+    display:flex; align-items:center; gap:16px;
+    padding:18px 20px;
+    background:#fbf8f3;
+    border:1px solid var(--line);
+    border-radius:14px;
+  }
+  .source-row .src-meta{ flex:1; min-width:0;}
+  .source-row .src-label{
+    font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:3px;
+  }
+  .source-row .src-url{
+    font: 500 14px var(--sans);
+    color:var(--ink); text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+    word-break:break-all;
+  }
+  .source-row .src-url:hover{ color:var(--accent);}
+  .source-row .src-url svg{ width:13px; height:13px; flex-shrink:0;}
+  .verified-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:7px 12px; border-radius:9px;
+    background: rgba(44,141,74,.12); color:#1f6634;
+    font-size:12.5px; font-weight:700; letter-spacing:.01em;
+    border:1px solid rgba(44,141,74,.22);
+  }
+  .verified-badge svg{ width:13px; height:13px;}
+
+  .side-stats{
+    display:flex; flex-direction:column; gap:0;
+  }
+  .side-stats .row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+    margin-top:0;
+  }
+  .side-stats .row:last-child{ border-bottom:0;}
+  .side-stats .row .lbl{
+    font-size:12.5px; color:var(--muted);
+    display:flex; align-items:center; gap:8px;
+  }
+  .side-stats .row .lbl svg{ width:14px; height:14px;}
+  .side-stats .row .val{ font-size:14px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums;}
+  .side-stats .row .val.accent{ color:var(--accent);}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div id="root"></div>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="programdetails.jsx"></script>
+</body>
+</html>

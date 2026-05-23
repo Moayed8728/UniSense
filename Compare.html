@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UniSense — Compare programmes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="unisense.css">
+<style>
+  .cmp-head{
+    max-width:1180px; margin:0 auto 24px;
+  }
+  .cmp-head h1{ font-size:42px; margin:0 0 4px; letter-spacing:-0.02em;}
+  .cmp-head .lede{ color:var(--muted); margin:0; max-width:560px;}
+
+  .cmp-table-wrap{
+    max-width:1180px; margin:0 auto;
+    background:var(--paper);
+    border:1px solid rgba(25,21,18,.06);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(25,21,18,.04), 0 14px 30px -20px rgba(25,21,18,.18);
+  }
+  .cmp-scroll{ overflow-x:auto;}
+  .cmp-grid{
+    display:grid;
+    grid-template-columns: 200px 1fr 1fr;
+    min-width:880px;
+  }
+  .cmp-col-head{
+    padding:24px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:#faf6ee;
+  }
+  .cmp-col-head:last-child{ border-right:0;}
+  .cmp-col-head.spacer{}
+  .cmp-col-head .uni-row{
+    display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  }
+  .cmp-col-head .uni-mark{
+    width:48px; height:48px; border-radius:11px;
+    background:#22191b; color:#fff;
+    display:grid; place-items:center;
+    font-family:var(--serif); font-size:18px;
+    flex-shrink:0;
+  }
+  .cmp-col-head .pname{
+    font-family:var(--serif); font-size:22px;
+    line-height:1.1; letter-spacing:-0.01em;
+    margin:0 0 4px;
+  }
+  .cmp-col-head .uname{
+    font-size:13px; color:var(--ink-2); font-weight:500;
+    display:flex; align-items:center; gap:6px;
+  }
+  .cmp-col-head .country{ color:var(--muted);}
+
+  .fit-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 14px;
+    border-radius:11px;
+    background:var(--accent);
+    color:#fff;
+    font:700 14px/1 var(--sans);
+    margin-bottom:14px;
+    box-shadow: 0 6px 14px -6px rgba(192,0,0,.5);
+  }
+  .fit-badge.dim{ background:#22191b; box-shadow:0 6px 14px -6px rgba(34,25,27,.45);}
+  .fit-badge svg{ width:13px; height:13px;}
+
+  .cmp-row{
+    display:contents;
+  }
+  .cmp-cell{
+    padding:18px 24px;
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    font-size:14px; color:var(--ink);
+    display:flex; align-items:center;
+    gap:8px;
+  }
+  .cmp-cell:last-child{ border-right:0;}
+  .cmp-cell.lbl{
+    background:#fbf8f3;
+    font-size:12.5px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted);
+  }
+  .cmp-cell .ico{ color:var(--accent); width:14px; height:14px; flex-shrink:0;}
+  .cmp-cell.win{ background:#fbf8f3;}
+  .cmp-cell.win .v{ color:#1f6634; font-weight:700;}
+  .cmp-cell.win::after{
+    content:"better"; font-size:10px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:#1f6634;
+    padding:2px 7px; border-radius:5px;
+    background:rgba(44,141,74,.12);
+    margin-left:auto;
+  }
+
+  .cmp-actions{
+    grid-column: 1 / -1;
+    display:flex; align-items:center; gap:10px;
+    padding:16px 24px;
+    background:#fbf8f3;
+  }
+  .cmp-actions .left{ display:flex; gap:8px;}
+  .cmp-actions .right{ display:flex; gap:8px; margin-left:auto;}
+  .cmp-actions button{
+    appearance:none; border:1px solid var(--line-2);
+    background:var(--paper);
+    padding:10px 14px;
+    border-radius:10px;
+    font:600 12.5px/1 var(--sans);
+    color:var(--ink-2);
+    cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .cmp-actions button:hover{ border-color:var(--muted-2); color:var(--ink);}
+  .cmp-actions button.danger:hover{ border-color:var(--accent); color:var(--accent); background:#fdecec;}
+  .cmp-actions button.primary{ background:#22191b; color:#f6f1e9; border-color:#22191b;}
+  .cmp-actions button.primary:hover{ background:#0c0a08; color:#fff;}
+  .cmp-actions button svg{ width:13px; height:13px;}
+
+  /* Insights */
+  .insights{
+    max-width:1180px; margin:24px auto 0;
+    background:var(--paper);
+    border:1px solid rgba(25,21,18,.06);
+    border-radius:18px;
+    padding:28px 32px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 1px 2px rgba(25,21,18,.04);
+  }
+  .insights-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .insights-head .ico{
+    width:32px; height:32px; border-radius:9px;
+    background:var(--accent-tint); color:var(--accent);
+    display:grid; place-items:center;
+  }
+  .insights-head .ico svg{ width:16px; height:16px;}
+  .insights-head h2{
+    font-family:var(--serif); font-weight:400;
+    font-size:22px; margin:0; letter-spacing:-0.01em;
+  }
+  .insights-list{
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .insights-list li{
+    display:flex; align-items:flex-start; gap:14px;
+    padding:14px 16px;
+    border-radius:11px;
+    border:1px solid;
+    line-height:1.55;
+    font-size:14px;
+  }
+  .insights-list li.ok{ background:rgba(44,141,74,.06); border-color:rgba(44,141,74,.20); color:#1a4f29;}
+  .insights-list li.warn{ background:rgba(168,98,32,.06); border-color:rgba(168,98,32,.20); color:#5e3f15;}
+  .insights-list li .ic{
+    width:26px; height:26px; border-radius:8px;
+    display:grid; place-items:center; flex-shrink:0;
+    margin-top:1px;
+  }
+  .insights-list li.ok .ic{ background:rgba(44,141,74,.18); color:#1f6634;}
+  .insights-list li.warn .ic{ background:rgba(168,98,32,.18); color:#a86220;}
+  .insights-list li .ic svg{ width:14px; height:14px;}
+  .insights-list li .label{
+    font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    margin-bottom:4px;
+  }
+  .insights-list li.ok .label{ color:#1f6634;}
+  .insights-list li.warn .label{ color:#a86220;}
+  .insights-list li b{ font-weight:700;}
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<div id="root"></div>
+<script type="text/babel" src="shared.jsx"></script>
+<script type="text/babel" src="compare.jsx"></script>
+</body>
+</html>
