@@ -1,5 +1,5 @@
 
-  # Web app conversion (Copy)
+  # Web app conversion
 
   This is a code bundle for Web app conversion (Copy). The original project is available at https://www.figma.com/design/UkkZ1cwcrakwOB9hcYEYSK/Web-app-conversion--Copy-.
 
