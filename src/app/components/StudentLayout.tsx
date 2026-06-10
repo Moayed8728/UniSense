@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import {
   BrainCircuit,
+  Bot,
   GitCompare,
   Heart,
   LayoutDashboard,
@@ -11,6 +12,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   UserRound,
+  WandSparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import { clearDemoSession, getDemoSession } from "../lib/auth";
@@ -26,6 +28,8 @@ const navItems = [
   { path: "/discover", label: "Search Programs", icon: Search },
   { path: "/smart-search", label: "Smart Search", icon: BrainCircuit },
   { path: "/student/recommendations", label: "Recommendations", icon: Sparkles },
+  { path: "/student/ai-recommendations", label: "AI Recommendations", icon: WandSparkles },
+  { path: "/student/ai-assistant", label: "AI Assistant", icon: Bot },
   { path: "/student/saved", label: "Saved Programs", icon: Heart },
   { path: "/student/compare", label: "Compare Programs", icon: GitCompare },
   { path: "/student/preferences", label: "Study Preferences", icon: SlidersHorizontal },
@@ -47,10 +51,10 @@ export function StudentLayout({ children }: StudentLayoutProps) {
 
   return (
     <div className="min-h-screen flex" style={{ background: "var(--background)" }}>
-      <aside className="w-64 shrink-0 flex flex-col fixed inset-y-0 left-0 z-40" style={{ background: "var(--sidebar)", borderRight: "1px solid var(--sidebar-border)" }}>
-        <div className="p-5 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
+      <aside className="w-72 shrink-0 flex flex-col fixed inset-y-0 left-0 z-40" style={{ background: "linear-gradient(180deg, rgba(12,18,28,0.99), rgba(9,10,16,0.99))", borderRight: "1px solid rgba(6,182,212,0.14)" }}>
+        <div className="px-5 py-4 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
           <Link to="/student" className="block">
-            <UniSenseLogo className="h-12 w-full" />
+            <UniSenseLogo className="h-14 w-full" />
             <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-2 pl-1">Student Portal</div>
           </Link>
         </div>
@@ -69,7 +73,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
           </div>
         </div>
 
-        <nav className="flex-1 min-h-0 px-3 py-4 overflow-y-auto">
+        <nav className="app-sidebar-scroll flex-1 min-h-0 px-3 py-4 overflow-y-auto">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">Discover</p>
           <div className="space-y-1">
             {navItems.map((item) => {
@@ -105,7 +109,7 @@ export function StudentLayout({ children }: StudentLayoutProps) {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col" style={{ marginLeft: "256px" }}>
+      <div className="flex-1 flex flex-col min-w-0 workspace-grid" style={{ marginLeft: "288px" }}>
         <header className="sticky top-0 z-30 border-b px-8 py-4 flex items-center justify-between" style={{ background: "rgba(10,10,15,0.85)", backdropFilter: "blur(20px)", borderColor: "var(--glass-border)" }}>
           <div>
             <h2 className="font-semibold text-lg leading-none">{navItems.find((item) => isActive(item.path, item.exact))?.label ?? "Program Discovery"}</h2>
@@ -120,7 +124,9 @@ export function StudentLayout({ children }: StudentLayoutProps) {
             </div>
           )}
         </header>
-        <main className="flex-1 p-8">{children}</main>
+        <main className="flex-1 p-8 xl:p-10">
+          <div className="max-w-[1600px] mx-auto">{children}</div>
+        </main>
       </div>
     </div>
   );

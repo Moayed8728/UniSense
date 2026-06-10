@@ -2,14 +2,38 @@ import { useMemo, useState } from "react";
 import { Sparkles, Search as SearchIcon, Wand2, BookText, Cpu } from "lucide-react";
 import { StudentLayout } from "../../components/StudentLayout";
 import { ProgramCard } from "../../components/ProgramCard";
-import { programs, smartSearchExpansion } from "../../data/programs";
+import { programs } from "../../data/programs";
+
+const synonymGroups: Record<string, string[]> = {
+  software: ["Software Engineering", "Computer Science", "Application Development"],
+  data: ["Data Science", "Artificial Intelligence", "Computer Science"],
+  ai: ["Artificial Intelligence", "Data Science", "Computer Science"],
+  business: ["Business", "Finance", "Economics"],
+  health: ["Public Health", "Medicine", "Healthcare"],
+  engineering: ["Engineering", "Software Engineering", "Architecture"],
+  design: ["Architecture", "Design", "Engineering"],
+  security: ["Cybersecurity", "Computer Science", "Software Engineering"],
+};
+
+const expandQuery = (query: string) => {
+  const normalized = query.toLowerCase().trim();
+  const matchedGroup = Object.entries(synonymGroups).find(([key]) => normalized.includes(key));
+  const terms = matchedGroup?.[1] ?? [query];
+  return terms.map((term, index) => ({
+    term,
+    weight: Math.max(0.6, 1 - index * 0.12),
+    source: index < 2 ? "dictionary" as const : "semantic" as const,
+  }));
+};
 
 export default function SmartSearch() {
-  const [query, setQuery] = useState(smartSearchExpansion.rawQuery);
-  const [submitted, setSubmitted] = useState(smartSearchExpansion.rawQuery);
+  const [query, setQuery] = useState("software");
+  const [submitted, setSubmitted] = useState("software");
 
-  // In the prototype we always demonstrate the "software" expansion.
-  const expansion = smartSearchExpansion;
+  const expansion = useMemo(() => ({
+    rawQuery: submitted,
+    expandedTerms: expandQuery(submitted),
+  }), [submitted]);
   const expandedTermNames = expansion.expandedTerms.map((t) => t.term);
 
   const results = useMemo(() => {
@@ -18,12 +42,13 @@ export default function SmartSearch() {
         const matched = expandedTermNames.filter(
           (t) =>
             p.field.toLowerCase().includes(t.toLowerCase()) ||
-            p.name.toLowerCase().includes(t.toLowerCase())
+            p.name.toLowerCase().includes(t.toLowerCase()) ||
+            p.summary.toLowerCase().includes(t.toLowerCase())
         );
         return { program: p, matched };
       })
       .filter((r) => r.matched.length > 0);
-  }, [submitted]);
+  }, [expandedTermNames]);
 
   return (
     <StudentLayout>
@@ -101,14 +126,13 @@ export default function SmartSearch() {
                       : "bg-accent-pink/15 text-accent-pink"
                   }`}
                 >
-                  {t.source === "dictionary" ? "synonyms" : "Gemini"}
+                  {t.source === "dictionary" ? "synonyms" : "semantic"}
                 </span>
               </div>
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-4">
-            Terms are sourced from the local synonyms dictionary first; the Gemini API is only called when the local lookup
-            returns no expansions.
+            This prototype uses local synonym and semantic groups, so no API key or backend service is required.
           </p>
         </div>
 

@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Clock, DollarSign, GraduationCap, Plus, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { StudentLayout } from "../../components/StudentLayout";
 import { formatDuration, formatFee, getUniversityById, programs, type Program } from "../../data/programs";
+import { COMPARISON_CHANGED_EVENT, getComparisonProgramIds, setComparisonProgramIds } from "../../lib/comparison";
 
 export default function ComparePrograms() {
-  const [selected, setSelected] = useState<Program[]>(programs.slice(0, 3));
+  const loadSelected = () => {
+    const ids = getComparisonProgramIds();
+    return ids.length
+      ? ids.map((id) => programs.find((program) => program.id === id)).filter((program): program is Program => Boolean(program))
+      : programs.slice(0, 3);
+  };
+  const [selected, setSelected] = useState<Program[]>(loadSelected);
   const [showPicker, setShowPicker] = useState(false);
   const [query, setQuery] = useState("");
 
   const addProgram = (program: Program) => {
     if (selected.length >= 4) return toast.error("You can compare up to four programs.");
-    setSelected((current) => [...current, program]);
+    const next = [...selected, program];
+    setSelected(next);
+    setComparisonProgramIds(next.map((item) => item.id));
     setShowPicker(false);
+  };
+
+  useEffect(() => {
+    const sync = () => setSelected(loadSelected());
+    window.addEventListener(COMPARISON_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(COMPARISON_CHANGED_EVENT, sync);
+  }, []);
+
+  const removeProgram = (programId: string) => {
+    const next = selected.filter((item) => item.id !== programId);
+    setSelected(next);
+    setComparisonProgramIds(next.map((item) => item.id));
   };
 
   return (
@@ -35,7 +56,7 @@ export default function ComparePrograms() {
             const university = getUniversityById(program.universityId);
             return (
               <article key={program.id} className="glass-card rounded-2xl p-5 border-glow relative">
-                <button onClick={() => setSelected((current) => current.filter((item) => item.id !== program.id))} className="absolute right-4 top-4 p-1.5 rounded-lg text-muted-foreground hover:text-destructive"><X className="w-4 h-4" /></button>
+                <button onClick={() => removeProgram(program.id)} className="absolute right-4 top-4 p-1.5 rounded-lg text-muted-foreground hover:text-destructive"><X className="w-4 h-4" /></button>
                 <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4"><GraduationCap className="w-6 h-6 text-primary" /></div>
                 <h2 className="font-semibold text-lg pr-6">{program.name}</h2>
                 <p className="text-sm font-medium mt-2">{university?.name ?? program.university}</p>
