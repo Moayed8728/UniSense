@@ -22,6 +22,8 @@ import ResetSuccess from "./pages/auth/ResetSuccess";
 import StudentDashboard from "./pages/student/Dashboard";
 import SavedPrograms from "./pages/student/SavedPrograms";
 import ComparePrograms from "./pages/student/ComparePrograms";
+import Recommendations from "./pages/student/Recommendations";
+import StudyPreferences from "./pages/student/StudyPreferences";
 
 // Program discovery pages
 import DiscoverSearch from "./pages/discover/Search";
@@ -39,11 +41,6 @@ import UpdateRequests from "./pages/rep/UpdateRequests";
 import SourceLinks from "./pages/rep/SourceLinks";
 import SubmissionHistory from "./pages/rep/SubmissionHistory";
 import Profile from "./pages/rep/Profile";
-import SubmitProgram from "./pages/rep/SubmitProgram";
-import MySubmissions from "./pages/rep/MySubmissions";
-import SubmissionDetails from "./pages/rep/SubmissionDetails";
-import EditSubmission from "./pages/rep/EditSubmission";
-import PreviewSubmission from "./pages/rep/PreviewSubmission";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -89,6 +86,8 @@ export const router = createBrowserRouter([
       { index: true, Component: StudentDashboard },
       { path: "saved", Component: SavedPrograms },
       { path: "compare", Component: ComparePrograms },
+      { path: "recommendations", Component: Recommendations },
+      { path: "preferences", Component: StudyPreferences },
     ],
   },
   {
@@ -122,11 +121,6 @@ export const router = createBrowserRouter([
       { path: "source-links", Component: SourceLinks },
       { path: "history", Component: SubmissionHistory },
       { path: "profile", Component: Profile },
-      { path: "submit", Component: SubmitProgram },
-      { path: "submissions", Component: MySubmissions },
-      { path: "submissions/:id", Component: SubmissionDetails },
-      { path: "submissions/:id/edit", Component: EditSubmission },
-      { path: "submissions/:id/preview", Component: PreviewSubmission },
     ],
   },
   {
@@ -134,7 +128,6 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: AdminDashboard },
       { path: "rep-applications", Component: RepApplications },
-      { path: "submissions", Component: AdminDashboard },
       { path: "imports", Component: AdminProgramImports },
       { path: "review/:id", Component: ReviewSubmission },
       { path: "sources", Component: SourceVerification },

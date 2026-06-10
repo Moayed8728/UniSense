@@ -117,10 +117,10 @@ export default function LandingPage() {
               </div>
               <h2 className="text-2xl font-semibold mb-3">University Representative</h2>
               <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                Apply to manage your university's program information. Submit official details, import program data, and keep records accurate.
+                Apply to manage one university, submit official source links, and keep source-derived program data accurate.
               </p>
               <ul className="space-y-2 mb-6">
-                {["Import program data via JSON/CSV/URL", "Submit official university details", "Track import & review status", "Requires admin verification"].map((item) => (
+                {["Submit catalogue sources or datasets", "Submit official university details", "Track verification status", "Requires admin verification"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     {item}
@@ -149,10 +149,10 @@ export default function LandingPage() {
               </div>
               <h2 className="text-2xl font-semibold mb-3">Administrator</h2>
               <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                Review and approve representative applications and program imports. Manage universities, users, and system analytics.
+                Review representative applications, official sources, and program source data. Manage universities, users, and analytics.
               </p>
               <ul className="space-y-2 mb-6">
-                {["Review representative applications", "Approve/reject program imports", "Manage universities & users", "View analytics & audit logs"].map((item) => (
+                {["Review representative applications", "Verify official program sources", "Manage universities & users", "View analytics & audit logs"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-1.5 h-1.5 rounded-full bg-accent-violet shrink-0" />
                     {item}

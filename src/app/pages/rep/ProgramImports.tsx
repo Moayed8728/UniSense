@@ -52,7 +52,7 @@ export default function ProgramImports() {
   const handleSubmit = () => {
     if (!method) return;
     submitCatalogueImport({ method, source: method === "url" ? url : uploadedFile ?? "uploaded-file" });
-    toast.success("Programs submitted for admin review!");
+    toast.success("Official program source submitted for Admin review!");
     navigate("/rep/history");
   };
 
@@ -82,8 +82,8 @@ export default function ProgramImports() {
           <Info className="w-5 h-5 text-info shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground">
             <span className="font-semibold text-foreground">Source Review Flow: </span>
-            Upload → Validate → Submit for Admin Review → Approval → Programs Published.
-            All source-derived programs are verified before becoming visible to students.
+            Add source → Validate → Submit for Admin Review → Approval → Programs Published.
+            Admin verification is required before students can view this data.
           </div>
         </div>
 

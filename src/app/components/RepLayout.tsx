@@ -15,8 +15,6 @@ import {
   Bell,
   X,
   ShieldCheck,
-  FilePlus2,
-  ClipboardList,
 } from "lucide-react";
 
 interface RepLayoutProps {
@@ -25,15 +23,13 @@ interface RepLayoutProps {
 }
 
 const navItems = [
-  { path: "/rep", label: "Overview", icon: LayoutDashboard, exact: true },
+  { path: "/rep", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/rep/university", label: "My University", icon: Building2 },
-  { path: "/rep/submit", label: "Submit Program Update", icon: FilePlus2 },
-  { path: "/rep/submissions", label: "My Submissions", icon: ClipboardList },
-  { path: "/rep/imports", label: "Catalogue Sources", icon: Upload },
-  { path: "/rep/imported-programs", label: "University Programs", icon: Table2 },
+  { path: "/rep/source-links", label: "Official Sources", icon: Link2 },
+  { path: "/rep/imports", label: "Program Catalogue Sources", icon: Upload },
+  { path: "/rep/imported-programs", label: "Programs Under My University", icon: Table2 },
   { path: "/rep/update-requests", label: "Update Requests", icon: RefreshCw },
-  { path: "/rep/source-links", label: "Source Links", icon: Link2 },
-  { path: "/rep/history", label: "Submission History", icon: History },
+  { path: "/rep/history", label: "Verification History", icon: History },
   { path: "/rep/profile", label: "Profile", icon: User },
 ];
 

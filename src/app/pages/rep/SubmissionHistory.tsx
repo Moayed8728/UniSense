@@ -54,7 +54,7 @@ const typeIcon = {
 };
 
 const typeLabel = {
-  import: "Program Import",
+  import: "Program Source Review",
   update: "Update Request",
   source: "Source Link",
 };
@@ -86,8 +86,8 @@ export default function SubmissionHistory() {
       <div className="space-y-8 max-w-5xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Submission History</h1>
-            <p className="text-muted-foreground">Complete history of imports, updates, and source links for UTM.</p>
+            <h1 className="text-3xl font-bold mb-2">Verification History</h1>
+            <p className="text-muted-foreground">Submissions & verification status for university updates, official sources, and program source data.</p>
           </div>
           <button
             onClick={() => downloadCsv("unisense-submission-history.csv", [
@@ -107,7 +107,7 @@ export default function SubmissionHistory() {
             { label: "Total Submissions", value: history.length, color: "text-foreground" },
             { label: "Approved", value: history.filter(h => h.status === "approved" || h.status === "verified").length, color: "text-success" },
             { label: "Pending", value: history.filter(h => h.status === "pending").length, color: "text-warning" },
-            { label: "Programs Imported", value: history.reduce((acc, h) => acc + h.programs, 0), color: "text-primary" },
+            { label: "Programs Detected", value: history.reduce((acc, h) => acc + h.programs, 0), color: "text-primary" },
           ].map(({ label, value, color }) => (
             <div key={label} className="glass-card rounded-2xl p-5 shadow-premium">
               <div className={`text-3xl font-bold ${color} mb-1`}>{value}</div>

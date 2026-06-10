@@ -47,15 +47,15 @@ export default function SourceLinks() {
       <div className="space-y-8 max-w-5xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Source Links</h1>
-            <p className="text-muted-foreground">Official source links for UTM programme data. Verified by admin team.</p>
+            <h1 className="text-3xl font-bold mb-2">Official Sources</h1>
+            <p className="text-muted-foreground">Official source links for UTM program data. Official source links are required for verification.</p>
           </div>
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-5 py-2.5 gradient-primary text-white rounded-xl font-semibold shadow-premium hover:shadow-premium-lg transition-all"
           >
             <Plus className="w-4 h-4" />
-            Add Source Link
+            Submit Source Update
           </button>
         </div>
 
@@ -66,8 +66,8 @@ export default function SourceLinks() {
         >
           <ShieldCheck className="w-5 h-5 text-info shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Programme imports are verified before becoming visible to students.</span>{" "}
-            All source links undergo authenticity verification to ensure data integrity.
+            <span className="font-semibold text-foreground">Admin verification is required before students can view this data.</span>{" "}
+            Program data is collected from verified official sources.
           </p>
         </div>
 

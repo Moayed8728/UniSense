@@ -20,9 +20,9 @@ import {
 import { toast } from "sonner";
 
 const recentImports = [
-  { id: "IMP-008", description: "Bulk CSV import", programCount: 147, status: "pending" as const, date: "2026-05-30" },
-  { id: "IMP-006", description: "JSON import: Computing programs", programCount: 23, status: "approved" as const, date: "2026-05-05" },
-  { id: "IMP-004", description: "URL crawl: Engineering faculty", programCount: 45, status: "approved" as const, date: "2026-04-28" },
+  { id: "IMP-008", description: "Structured dataset source", programCount: 147, status: "pending" as const, date: "2026-05-30" },
+  { id: "IMP-006", description: "Computing catalogue dataset", programCount: 23, status: "approved" as const, date: "2026-05-05" },
+  { id: "IMP-004", description: "Engineering catalogue URL", programCount: 45, status: "approved" as const, date: "2026-04-28" },
 ];
 
 export default function RepDashboard() {
@@ -42,7 +42,7 @@ export default function RepDashboard() {
               <h1 className="text-3xl font-bold mb-2">
                 Welcome back, <span className="text-gradient-hero">Ahmad Razak</span>
               </h1>
-              <p className="text-muted-foreground">Manage program data for your assigned university.</p>
+              <p className="text-muted-foreground">Manage official sources and program data linked under your assigned university.</p>
             </div>
             <div className="glass-card rounded-2xl p-5 min-w-60" style={{ border: "1px solid rgba(124,58,237,0.2)", background: "rgba(124,58,237,0.06)" }}>
               <div className="flex items-center gap-3 mb-3">
@@ -76,9 +76,9 @@ export default function RepDashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <StatsCard title="Programs Imported" value={215} icon={Table2} trend="+147 this month" trendUp={true} color="blue" />
+          <StatsCard title="Programs Linked" value={215} icon={Table2} trend="+147 source records" trendUp={true} color="blue" />
           <StatsCard title="Published" value={132} icon={CheckCircle} trend="Live for students" trendUp={true} color="green" />
-          <StatsCard title="Pending Review" value={80} icon={Clock} trend="3 import batches" color="amber" />
+          <StatsCard title="Pending Review" value={80} icon={Clock} trend="3 source submissions" color="amber" />
           <StatsCard title="Rejected" value={3} icon={FileX} trend="Needs attention" color="red" />
         </div>
 
@@ -92,15 +92,15 @@ export default function RepDashboard() {
               </div>
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-warning mb-1">Import Pending Admin Review</h3>
+              <h3 className="font-semibold text-warning mb-1">Program Source Pending Admin Review</h3>
               <p className="text-muted-foreground text-sm mb-3">
-                Your CSV import of 147 programs is waiting for admin approval. Program imports are verified before becoming visible to students.
+                A structured dataset containing 147 detected programs is waiting for Admin approval before publication.
               </p>
               <Link
                 to="/rep/imports"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-warning text-black rounded-xl hover:bg-warning/90 transition-all text-sm font-semibold"
               >
-                View Import Status
+                View Source Status
               </Link>
             </div>
           </div>
@@ -110,7 +110,7 @@ export default function RepDashboard() {
           {/* Recent Imports */}
           <div className="lg:col-span-2 glass-card rounded-2xl shadow-premium-lg overflow-hidden">
             <div className="p-5 border-b border-glass-border flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Recent Imports</h2>
+              <h2 className="text-xl font-semibold">Recent Source Submissions</h2>
               <Link to="/rep/history" className="text-sm text-primary hover:text-primary-hover font-semibold flex items-center gap-1 group">
                 View History
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -153,10 +153,10 @@ export default function RepDashboard() {
                     <Upload className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <h3 className="font-semibold mb-1">Import Programs</h3>
-                <p className="text-xs text-muted-foreground mb-4">Upload JSON/CSV or submit catalogue URL</p>
+                <h3 className="font-semibold mb-1">Submit Official Program Source</h3>
+                <p className="text-xs text-muted-foreground mb-4">Add a catalogue source or upload a structured dataset</p>
                 <Link to="/rep/imports" className="w-full flex items-center justify-center py-2.5 bg-white text-primary rounded-xl text-sm font-semibold hover:bg-white/90 transition-all">
-                  Start Import
+                  Submit Source
                 </Link>
               </div>
             </div>
@@ -193,7 +193,7 @@ export default function RepDashboard() {
                 <span className="text-3xl font-bold">91%</span>
                 <span className="text-sm text-success font-semibold">+6%</span>
               </div>
-              <p className="text-xs text-muted-foreground">Your imports have a high approval rate.</p>
+              <p className="text-xs text-muted-foreground">Your official source submissions have a high approval rate.</p>
             </div>
 
             <div className="glass-card rounded-2xl p-5 shadow-premium">

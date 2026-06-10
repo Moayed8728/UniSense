@@ -45,6 +45,9 @@ export default function ImportedPrograms() {
               Source-derived programs for Universiti Teknologi Malaysia.{" "}
               <span className="text-primary font-medium">Access restricted to your assigned university.</span>
             </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Programs are stored under your assigned university and are collected from verified official sources or structured datasets before Admin approval.
+            </p>
           </div>
           <div
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium"

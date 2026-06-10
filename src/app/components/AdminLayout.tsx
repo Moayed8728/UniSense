@@ -14,7 +14,6 @@ import {
   Bell,
   X,
   UserCheck,
-  ClipboardCheck,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -23,13 +22,12 @@ interface AdminLayoutProps {
 }
 
 const navItems = [
-  { path: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
-  { path: "/admin/rep-applications", label: "Rep Applications", icon: UserCheck },
-  { path: "/admin/submissions", label: "Program Submissions", icon: ClipboardCheck },
-  { path: "/admin/universities", label: "Universities", icon: Building2 },
-  { path: "/admin/imports", label: "Program Imports", icon: Upload },
-  { path: "/admin/sources", label: "Source Verification", icon: Shield },
-  { path: "/admin/users", label: "Users", icon: Users },
+  { path: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { path: "/admin/rep-applications", label: "Representative Applications", icon: UserCheck },
+  { path: "/admin/sources", label: "Official Source Verification", icon: Shield },
+  { path: "/admin/imports", label: "Program Source Review", icon: Upload },
+  { path: "/admin/universities", label: "Manage Universities", icon: Building2 },
+  { path: "/admin/users", label: "Manage Users", icon: Users },
   { path: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { path: "/admin/audit", label: "Audit Logs", icon: FileText },
   { path: "/admin/settings", label: "Settings", icon: Settings },

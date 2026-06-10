@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router";
-import { Compass, Search, LayoutGrid, Sparkles, LayoutDashboard, Heart, GitCompare, LogOut } from "lucide-react";
+import { Compass, Search, LayoutGrid, Sparkles, LayoutDashboard, Heart, GitCompare, LogOut, SlidersHorizontal } from "lucide-react";
 import { toast } from "sonner";
 
 interface StudentLayoutProps {
@@ -12,11 +12,13 @@ export function StudentLayout({ children }: StudentLayoutProps) {
 
   const navItems = [
     { path: "/student", label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { path: "/discover", label: "Search", icon: Search },
-    { path: "/browse", label: "Browse", icon: LayoutGrid },
+    { path: "/browse", label: "Browse Universities", icon: LayoutGrid },
+    { path: "/discover", label: "Search Programs", icon: Search },
     { path: "/smart-search", label: "Smart Search", icon: Sparkles },
-    { path: "/student/saved", label: "Saved", icon: Heart },
-    { path: "/student/compare", label: "Compare", icon: GitCompare },
+    { path: "/student/recommendations", label: "Recommendations", icon: Sparkles },
+    { path: "/student/saved", label: "Saved Programs", icon: Heart },
+    { path: "/student/compare", label: "Compare Programs", icon: GitCompare },
+    { path: "/student/preferences", label: "Study Preferences", icon: SlidersHorizontal },
   ];
 
   const isActive = (path: string, exact?: boolean) =>

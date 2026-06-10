@@ -42,7 +42,7 @@ export default function MySubmissions() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Submitted Programs</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Submissions & Verification Status</h1>
           <p className="text-gray-600">Track submissions for Universiti Teknologi Malaysia only.</p>
         </div>
 

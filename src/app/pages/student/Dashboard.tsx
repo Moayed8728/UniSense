@@ -152,7 +152,7 @@ export default function StudentDashboard() {
                 <p className="text-muted-foreground leading-relaxed mb-6">
                   Get personalized program recommendations based on your interests, goals, and academic background
                 </p>
-                <button onClick={() => navigate("/smart-search")} className="px-6 py-3 bg-accent-violet text-white rounded-xl font-semibold shadow-premium hover:shadow-premium-lg hover:scale-105 transition-all">
+                <button onClick={() => navigate("/student/recommendations")} className="px-6 py-3 bg-accent-violet text-white rounded-xl font-semibold shadow-premium hover:shadow-premium-lg hover:scale-105 transition-all">
                   Get Recommendations
                 </button>
               </div>

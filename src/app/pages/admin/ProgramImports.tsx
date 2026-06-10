@@ -78,7 +78,7 @@ export default function AdminProgramImports() {
         <div className="relative overflow-hidden glass-card rounded-3xl p-8 shadow-premium-xl border-glow">
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.08))" }} />
           <div className="relative">
-            <h1 className="text-3xl font-bold mb-2">Program Imports</h1>
+            <h1 className="text-3xl font-bold mb-2">Program Source Review</h1>
             <p className="text-muted-foreground">Review program batches grouped by their university parent record.</p>
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function AdminProgramImports() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-5">
           {[
-            { label: "Total Imports", value: imports.length, color: "text-foreground", icon: Upload, bg: "bg-primary/10", iconColor: "text-primary" },
+            { label: "Total Sources", value: imports.length, color: "text-foreground", icon: Upload, bg: "bg-primary/10", iconColor: "text-primary" },
             { label: "Pending Review", value: imports.filter(i => i.status === "pending").length, color: "text-warning", icon: AlertCircle, bg: "bg-warning/10", iconColor: "text-warning" },
             { label: "Approved", value: imports.filter(i => i.status === "approved").length, color: "text-success", icon: CheckCircle, bg: "bg-success/10", iconColor: "text-success" },
             { label: "Programs Queued", value: imports.filter(i => i.status === "pending").reduce((acc, i) => acc + i.programCount, 0), color: "text-accent-blue", icon: Building2, bg: "bg-accent-blue/10", iconColor: "text-accent-blue" },
@@ -108,7 +108,7 @@ export default function AdminProgramImports() {
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search imports..."
+                placeholder="Search program sources..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 glass-card border border-glass-border rounded-xl focus:outline-none focus:border-accent-violet/50 text-sm transition-all"
@@ -281,8 +281,8 @@ export default function AdminProgramImports() {
             <h3 className="text-2xl font-bold mb-2">{showConfirm.action === "approve" ? "Approve Import?" : "Reject Import?"}</h3>
             <p className="text-muted-foreground mb-5">
               {showConfirm.action === "approve"
-                ? `Approving this import will publish ${showConfirm.item.programCount} programs from ${showConfirm.item.university} to the platform.`
-                : `Rejecting this import will notify the representative and allow them to fix and resubmit.`}
+                ? `Approving this verified source data will publish ${showConfirm.item.programCount} programs under ${showConfirm.item.university}.`
+                : `Rejecting this source review will notify the representative and allow them to correct the official source or dataset.`}
             </p>
             {showConfirm.action === "reject" && (
               <div className="mb-5">

@@ -82,7 +82,7 @@ export default function AdminDashboard() {
             <h1 className="text-4xl font-bold mb-3">
               <span className="text-gradient-hero">Admin</span> Review Queue
             </h1>
-            <p className="text-muted-foreground text-lg">Review and verify program submissions from university representatives</p>
+            <p className="text-muted-foreground text-lg">Verify representatives, universities, official sources, and source-derived program data</p>
           </div>
         </div>
 
@@ -276,8 +276,8 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div>
-              <div className="font-semibold mb-0.5">Program Imports</div>
-              <div className="text-sm text-muted-foreground">5 imports pending</div>
+              <div className="font-semibold mb-0.5">Program Source Review</div>
+              <div className="text-sm text-muted-foreground">5 source datasets pending</div>
             </div>
           </Link>
           <Link

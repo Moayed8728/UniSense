@@ -75,7 +75,7 @@ export default function UniversityDetails() {
           <div className="flex items-center justify-between mb-5">
             <div>
               <h2 className="text-2xl font-semibold flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /> Programs offered by {university.shortName}</h2>
-              <p className="text-sm text-muted-foreground mt-1">Every program below has universityId: {university.id}</p>
+              <p className="text-sm text-muted-foreground mt-1">Programs are stored under their related university and published from verified sources.</p>
             </div>
           </div>
           {universityPrograms.length > 0 ? (

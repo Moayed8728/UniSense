@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   Heart,
+  GitCompare,
 } from "lucide-react";
 import { useState } from "react";
 import { StudentLayout } from "../../components/StudentLayout";
@@ -32,6 +33,10 @@ export default function ProgramDetails() {
     const nextFavorite = toggleFavoriteProgram(program.id);
     setFavorite(nextFavorite);
     toast.success(nextFavorite ? "Program added to favorites" : "Program removed from favorites");
+  };
+
+  const handleCompare = () => {
+    toast.success(`${program.name} is ready to compare.`);
   };
 
   const allUnverified = program.sources.every((s) => s.verificationStatus !== "verified");
@@ -168,8 +173,20 @@ export default function ProgramDetails() {
                 }`}
               >
                 <Heart className={`w-4 h-4 ${favorite ? "fill-current" : ""}`} />
-                {favorite ? "Remove from Favorites" : "Add to Favorites"}
+                {favorite ? "Remove Saved Program" : "Save Program"}
               </button>
+              <Link
+                to="/student/compare"
+                onClick={handleCompare}
+                className="mt-3 w-full py-3 rounded-xl glass-card font-semibold border-glow transition-all inline-flex items-center justify-center gap-2"
+              >
+                <GitCompare className="w-4 h-4" />
+                Add to Compare
+              </Link>
+              <div className="grid grid-cols-2 gap-3 mt-5 text-xs">
+                <div className="p-3 rounded-xl bg-success/10"><p className="text-muted-foreground">Source status</p><p className="text-success font-semibold mt-1">Verified</p></div>
+                <div className="p-3 rounded-xl bg-accent-blue/10"><p className="text-muted-foreground">Publication</p><p className="text-accent-blue font-semibold mt-1">Published</p></div>
+              </div>
             </div>
 
             {/* Source references (3.3) */}
