@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import { Sparkles, GraduationCap, Shield, Users, Zap, ArrowRight, ChevronRight } from "lucide-react";
+import { UniSenseLogo } from "../components/UniSenseLogo";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -16,15 +17,7 @@ export default function LandingPage() {
       {/* Top Navbar */}
       <nav className="relative z-20 glass-card border-b border-glass-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary blur-lg opacity-50" />
-              <div className="relative gradient-primary p-2 rounded-xl shadow-premium">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <span className="text-xl font-bold text-gradient-hero">UniSense</span>
-          </div>
+          <UniSenseLogo className="w-56 h-16" />
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -57,10 +50,7 @@ export default function LandingPage() {
             <span className="text-sm font-medium text-muted-foreground">AI-Powered Education Platform</span>
           </div>
 
-          <h1 className="text-7xl font-bold mb-6 leading-tight">
-            Welcome to <br />
-            <span className="text-gradient-hero inline-block mt-2">UniSense</span>
-          </h1>
+          <UniSenseLogo className="w-full max-w-xl h-48 mx-auto mb-4" />
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
             Find the right university program with AI-powered guidance. The next-generation platform for managing university program data with verified, collaborative workflows.

@@ -1,8 +1,19 @@
 import { Link, useNavigate, useSearchParams } from "react-router";
-import { Sparkles, Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Shield } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getRepresentativeApplications } from "../../lib/prototypeStore";
+import { setDemoSession } from "../../lib/auth";
+import { UniSenseLogo } from "../../components/UniSenseLogo";
+
+const demoAccounts = [
+  { label: "Student", email: "student@unisense.com", route: "/student", role: "student" as const },
+  { label: "Admin", email: "admin@unisense.com", route: "/admin", role: "admin" as const },
+  { label: "Rep · Approved", email: "rep@unisense.com", route: "/rep", role: "representative" as const },
+  { label: "Rep · Pending", email: "pending.rep@unisense.com", route: "/auth/pending", role: "representative" as const },
+  { label: "Rep · Rejected", email: "rejected.rep@unisense.com", route: "/auth/rejected", role: "representative" as const },
+  { label: "Rep · Suspended", email: "suspended.rep@unisense.com", route: "/auth/suspended", role: "representative" as const },
+];
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,25 +24,42 @@ export default function Login() {
   const [email, setEmail] = useState(
     isAdminLogin ? "admin@unisense.com" : isRepresentativeLogin ? "rep@unisense.com" : "",
   );
-  const [password, setPassword] = useState(isAdminLogin || isRepresentativeLogin ? "demo1234" : "");
+  const [password, setPassword] = useState(isAdminLogin || isRepresentativeLogin ? "password123" : "");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const selectDemoAccount = (demoEmail: string) => {
     setEmail(demoEmail);
-    setPassword("demo1234");
+    setPassword("password123");
     toast.info("Demo credentials filled. Select Sign In to continue.");
   };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
+    const demoAccount = demoAccounts.find((account) => account.email === normalizedEmail);
+
+    if (demoAccount) {
+      if (password !== "password123") {
+        toast.error("Incorrect demo password. Use password123.");
+        return;
+      }
+      if (demoAccount.route === "/student" || demoAccount.route === "/admin" || demoAccount.route === "/rep") {
+        setDemoSession({ email: demoAccount.email, role: demoAccount.role });
+      }
+      toast.success(`Signed in as ${demoAccount.label}.`);
+      navigate(demoAccount.route);
+      return;
+    }
+
     const savedApplication = getRepresentativeApplications().find(
-      (application) => application.email.toLowerCase() === email.toLowerCase(),
+      (application) => application.email.toLowerCase() === normalizedEmail,
     );
 
     if (savedApplication) {
       localStorage.setItem("unisense.currentRepApplicationId", savedApplication.id);
       if (savedApplication.status === "approved") {
+        setDemoSession({ email: savedApplication.email, role: "representative" });
         toast.success("Welcome back! Your representative access is approved.");
         navigate("/rep");
       } else if (savedApplication.status === "rejected") {
@@ -44,42 +72,7 @@ export default function Login() {
       return;
     }
 
-    // Demo login logic - in production this would call an API
-    // For demo purposes:
-    // admin@unisense.com -> Admin Dashboard
-    // rep@unisense.com (approved) -> Rep Dashboard
-    // rep-pending@unisense.com -> Pending Screen
-    // rep-rejected@unisense.com -> Rejected Screen
-    // student@unisense.com -> Student Dashboard
-
-    if (email === "admin@unisense.com") {
-      toast.success("Welcome back, Admin!");
-      navigate("/admin");
-    } else if (email === "rep@unisense.com") {
-      toast.success("Welcome back, Representative!");
-      navigate("/rep");
-    } else if (email === "rep-pending@unisense.com") {
-      toast.info("Your application is pending approval");
-      navigate("/auth/pending");
-    } else if (email === "rep-rejected@unisense.com") {
-      toast.error("Your application was rejected");
-      navigate("/auth/rejected");
-    } else if (email === "student@unisense.com") {
-      toast.success("Welcome back, Student!");
-      navigate("/student");
-    } else if (email === "suspended@unisense.com") {
-      toast.error("Your account has been suspended");
-      navigate("/auth/suspended");
-    } else if (isAdminLogin) {
-      toast.success("Welcome back, Admin!");
-      navigate("/admin");
-    } else if (isRepresentativeLogin) {
-      toast.success("Welcome back, Representative!");
-      navigate("/rep");
-    } else {
-      toast.success("Login successful!");
-      navigate("/student");
-    }
+    toast.error("Use one of the demo accounts below or a submitted representative application.");
   };
 
   return (
@@ -93,14 +86,8 @@ export default function Login() {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-60 animate-pulse" />
-            <div className="relative gradient-primary p-3 rounded-xl shadow-premium-lg">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold text-gradient-hero">UniSense</h1>
+        <Link to="/" className="block w-80 h-28 mx-auto mb-8">
+          <UniSenseLogo className="w-full h-full" />
         </Link>
 
         {/* Login Card */}
@@ -221,29 +208,15 @@ export default function Login() {
         <div className="mt-6 glass-card rounded-2xl p-5 shadow-premium border border-glass-border">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-2 h-2 bg-info rounded-full animate-pulse" />
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Demo Credentials</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Demo access · Password: password123</p>
           </div>
           <div className="space-y-2">
-            <button type="button" onClick={() => selectDemoAccount("admin@unisense.com")} className="w-full text-xs text-muted-foreground flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
-              <span>Admin</span>
-              <code className="font-mono text-primary">admin@unisense.com</code>
-            </button>
-            <button type="button" onClick={() => selectDemoAccount("student@unisense.com")} className="w-full text-xs text-muted-foreground flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
-              <span>Student</span>
-              <code className="font-mono text-primary">student@unisense.com</code>
-            </button>
-            <button type="button" onClick={() => selectDemoAccount("rep@unisense.com")} className="w-full text-xs text-muted-foreground flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
-              <span>Rep (Approved)</span>
-              <code className="font-mono text-primary">rep@unisense.com</code>
-            </button>
-            <button type="button" onClick={() => selectDemoAccount("rep-pending@unisense.com")} className="w-full text-xs text-muted-foreground flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
-              <span>Rep (Pending)</span>
-              <code className="font-mono text-warning">rep-pending@unisense.com</code>
-            </button>
-            <button type="button" onClick={() => selectDemoAccount("rep-rejected@unisense.com")} className="w-full text-xs text-muted-foreground flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
-              <span>Rep (Rejected)</span>
-              <code className="font-mono text-destructive">rep-rejected@unisense.com</code>
-            </button>
+            {demoAccounts.map((account) => (
+              <button key={account.email} type="button" onClick={() => selectDemoAccount(account.email)} className="w-full text-xs text-muted-foreground flex items-center justify-between gap-3 py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
+                <span>{account.label}</span>
+                <code className="font-mono text-primary truncate">{account.email}</code>
+              </button>
+            ))}
           </div>
         </div>
 

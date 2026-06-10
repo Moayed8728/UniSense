@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { clearDemoSession } from "../lib/auth";
+import { UniSenseLogo } from "./UniSenseLogo";
 import {
   LayoutDashboard,
   Users,
@@ -45,6 +47,7 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
 
   const handleLogout = () => {
     setShowLogoutModal(false);
+    clearDemoSession();
     toast.success("You have been logged out successfully.");
     navigate("/auth/login");
   };
@@ -55,25 +58,14 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
     <div className="min-h-screen flex" style={{ background: "var(--background)" }}>
       {/* Sidebar */}
       <aside
-        className="w-64 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40"
-        style={{ background: "var(--sidebar)", borderRight: "1px solid var(--sidebar-border)" }}
+        className="w-72 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40"
+        style={{ background: "linear-gradient(180deg, rgba(17,15,27,0.99), rgba(10,10,16,0.99))", borderRight: "1px solid rgba(139,92,246,0.16)" }}
       >
         {/* Logo */}
-        <div className="p-5 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
-          <Link to="/" className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-accent-violet blur-lg opacity-50" />
-              <div
-                className="relative p-2 rounded-xl shadow-premium"
-                style={{ background: "linear-gradient(135deg, #8b5cf6, #ec4899)" }}
-              >
-                <Shield className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <div>
-              <div className="font-bold text-lg leading-none text-gradient-hero">UniSense</div>
-              <div className="text-xs text-muted-foreground mt-0.5">Admin Console</div>
-            </div>
+        <div className="px-5 py-4 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
+          <Link to="/" className="block">
+            <UniSenseLogo className="h-14 w-full" />
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-2 pl-1">Admin Console</div>
           </Link>
         </div>
 
@@ -102,7 +94,7 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
         </div>
 
         {/* Nav items */}
-        <nav className="flex-1 min-h-0 px-3 py-3 overflow-y-scroll">
+        <nav className="app-sidebar-scroll flex-1 min-h-0 px-3 py-3 overflow-y-auto">
           <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             Admin Pages
           </div>
@@ -113,7 +105,7 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium group ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-sm font-semibold group ${
                   active ? "text-accent-violet" : "text-muted-foreground hover:text-foreground"
                 }`}
                 style={
@@ -128,11 +120,6 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
               </Link>
             );
           })}
-          </div>
-          <div className="mt-3 px-3 py-2 rounded-xl bg-accent-violet/5 border border-accent-violet/10">
-            <p className="text-[11px] text-muted-foreground">
-              All {navItems.length} Admin pages are listed above. Scroll inside this sidebar to view every page.
-            </p>
           </div>
         </nav>
 
@@ -165,7 +152,7 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
       </aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col" style={{ marginLeft: "256px" }}>
+      <div className="flex-1 flex flex-col min-w-0 workspace-grid" style={{ marginLeft: "288px" }}>
         {/* Topbar */}
         <header
           className="sticky top-0 z-30 border-b px-8 py-4 flex items-center justify-between"
@@ -204,7 +191,9 @@ export function AdminLayout({ children, pageTitle }: AdminLayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 p-8">{children}</main>
+        <main className="flex-1 p-8 xl:p-10">
+          <div className="max-w-[1600px] mx-auto">{children}</div>
+        </main>
       </div>
 
       {/* Logout Modal */}

@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router";
 
-// Landing
-import LandingPage from "./pages/Landing";
+import IntroSplash from "./pages/IntroSplash";
 
 // Auth pages
 import Welcome from "./pages/auth/Welcome";
@@ -57,7 +56,7 @@ import Settings from "./pages/admin/Settings";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: LandingPage,
+    Component: IntroSplash,
   },
   {
     path: "/welcome",

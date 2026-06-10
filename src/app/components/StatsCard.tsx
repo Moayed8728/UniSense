@@ -64,11 +64,13 @@ export function StatsCard({
   const currentColor = colorStyles[color];
 
   return (
-    <div className="group glass-card rounded-2xl p-6 shadow-premium glass-card-hover border-glow transition-all duration-300">
+    <div className="group relative overflow-hidden glass-card rounded-2xl p-6 shadow-premium glass-card-hover transition-all duration-300 border border-white/[0.07]">
+      <div className={`absolute left-0 top-5 bottom-5 w-1 rounded-r-full ${currentColor.bg}`} />
+      <div className={`absolute -right-10 -top-10 w-28 h-28 rounded-full blur-3xl opacity-40 ${currentColor.bg}`} />
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm text-muted-foreground mb-2 font-medium">{title}</p>
-          <p className="text-4xl font-bold text-foreground mb-3 tracking-tight">{value}</p>
+          <p className="text-4xl font-bold text-foreground mb-3 tracking-tight tabular-nums">{value}</p>
           {trend && (
             <div className={`flex items-center gap-1.5 text-sm font-medium ${trendUp ? 'text-success' : 'text-destructive'}`}>
               {trendUp ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}

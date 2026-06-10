@@ -30,21 +30,30 @@ export default function RepDashboard() {
     <RepLayout>
       <div className="space-y-8">
         {/* Assigned University Banner */}
-        <div className="relative overflow-hidden glass-card rounded-3xl p-8 shadow-premium-lg border-glow">
-          <div className="absolute inset-0 gradient-hero opacity-10" />
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
-          <div className="relative flex items-start justify-between gap-6 flex-wrap">
+        <div className="relative overflow-hidden rounded-3xl p-8 shadow-premium-xl border border-primary/20 bg-[linear-gradient(120deg,rgba(25,23,49,0.98),rgba(18,24,48,0.96))]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(124,58,237,0.3),transparent_32%)]" />
+          <div className="relative flex items-center justify-between gap-8 flex-wrap">
             <div>
               <div className="inline-flex items-center gap-2 mb-4">
                 <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
                 <span className="text-sm text-muted-foreground font-medium">Verified Representative</span>
               </div>
-              <h1 className="text-3xl font-bold mb-2">
+              <h1 className="text-4xl xl:text-5xl font-bold mb-3 tracking-tight">
                 Welcome back, <span className="text-gradient-hero">Ahmad Razak</span>
               </h1>
-              <p className="text-muted-foreground">Manage official sources and program data linked under your assigned university.</p>
+              <p className="text-muted-foreground text-lg max-w-2xl">Keep UTM’s program catalogue accurate, sourced, and ready for admin verification.</p>
+              <div className="flex items-center gap-3 mt-6">
+                <Link to="/rep/imports" className="inline-flex items-center gap-2 px-5 py-3 gradient-primary text-white rounded-xl font-semibold shadow-premium">
+                  <Upload className="w-4 h-4" />
+                  Submit official source
+                </Link>
+                <Link to="/rep/submissions" className="inline-flex items-center gap-2 px-5 py-3 bg-white/[0.06] border border-white/10 rounded-xl font-semibold hover:bg-white/[0.1]">
+                  View submissions
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-            <div className="glass-card rounded-2xl p-5 min-w-60" style={{ border: "1px solid rgba(124,58,237,0.2)", background: "rgba(124,58,237,0.06)" }}>
+            <div className="rounded-2xl p-5 min-w-72 bg-white/[0.06] border border-white/10 backdrop-blur-xl">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                   <Building2 className="w-5 h-5 text-primary" />
@@ -64,7 +73,7 @@ export default function RepDashboard() {
 
         {/* Access Restriction Notice */}
         <div
-          className="glass-card rounded-xl p-4 flex items-start gap-3 text-sm"
+          className="glass-card rounded-2xl p-4 flex items-start gap-3 text-sm border-l-4 border-primary"
           style={{ border: "1px solid rgba(124,58,237,0.15)", background: "rgba(124,58,237,0.04)" }}
         >
           <Lock className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -83,7 +92,8 @@ export default function RepDashboard() {
         </div>
 
         {/* Alert: Pending import */}
-        <div className="glass-card rounded-2xl p-5 shadow-premium border-l-4 border-warning">
+        <div className="relative overflow-hidden glass-card rounded-2xl p-6 shadow-premium border border-warning/20">
+          <div className="absolute inset-y-0 left-0 w-1 bg-warning" />
           <div className="flex items-start gap-4">
             <div className="relative">
               <div className="absolute inset-0 bg-warning blur-lg opacity-20" />

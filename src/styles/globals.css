@@ -1,0 +1,8 @@
+@keyframes intro-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.intro-progress {
+  animation: intro-progress 5s linear forwards;
+}

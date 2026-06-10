@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
-import { Sparkles, User, Mail, Phone, Building2, Globe, Upload, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { User, Mail, Phone, Building2, Globe, Upload, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -78,15 +79,7 @@ export default function ApplyRepresentative() {
 
       <div className="relative w-full max-w-3xl mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-8" />
 
         {/* Progress Bar */}
         <div className="mb-8">
