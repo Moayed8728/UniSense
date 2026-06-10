@@ -17,11 +17,12 @@ import {
   Sparkles,
   ArrowRight,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const recentImports = [
-  { id: "IMP-008", description: "Bulk CSV import", programCount: 147, status: "pending" as const, date: "2026-05-30" },
-  { id: "IMP-006", description: "JSON import: Computing programs", programCount: 23, status: "approved" as const, date: "2026-05-05" },
-  { id: "IMP-004", description: "URL crawl: Engineering faculty", programCount: 45, status: "approved" as const, date: "2026-04-28" },
+  { id: "IMP-008", description: "Structured dataset source", programCount: 147, status: "pending" as const, date: "2026-05-30" },
+  { id: "IMP-006", description: "Computing catalogue dataset", programCount: 23, status: "approved" as const, date: "2026-05-05" },
+  { id: "IMP-004", description: "Engineering catalogue URL", programCount: 45, status: "approved" as const, date: "2026-04-28" },
 ];
 
 export default function RepDashboard() {
@@ -29,21 +30,30 @@ export default function RepDashboard() {
     <RepLayout>
       <div className="space-y-8">
         {/* Assigned University Banner */}
-        <div className="relative overflow-hidden glass-card rounded-3xl p-8 shadow-premium-lg border-glow">
-          <div className="absolute inset-0 gradient-hero opacity-10" />
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[100px]" />
-          <div className="relative flex items-start justify-between gap-6 flex-wrap">
+        <div className="relative overflow-hidden rounded-3xl p-8 shadow-premium-xl border border-primary/20 bg-[linear-gradient(120deg,rgba(25,23,49,0.98),rgba(18,24,48,0.96))]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_15%,rgba(124,58,237,0.3),transparent_32%)]" />
+          <div className="relative flex items-center justify-between gap-8 flex-wrap">
             <div>
               <div className="inline-flex items-center gap-2 mb-4">
                 <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
                 <span className="text-sm text-muted-foreground font-medium">Verified Representative</span>
               </div>
-              <h1 className="text-3xl font-bold mb-2">
+              <h1 className="text-4xl xl:text-5xl font-bold mb-3 tracking-tight">
                 Welcome back, <span className="text-gradient-hero">Ahmad Razak</span>
               </h1>
-              <p className="text-muted-foreground">Manage program data for your assigned university.</p>
+              <p className="text-muted-foreground text-lg max-w-2xl">Keep UTM’s program catalogue accurate, sourced, and ready for admin verification.</p>
+              <div className="flex items-center gap-3 mt-6">
+                <Link to="/rep/imports" className="inline-flex items-center gap-2 px-5 py-3 gradient-primary text-white rounded-xl font-semibold shadow-premium">
+                  <Upload className="w-4 h-4" />
+                  Submit official source
+                </Link>
+                <Link to="/rep/submissions" className="inline-flex items-center gap-2 px-5 py-3 bg-white/[0.06] border border-white/10 rounded-xl font-semibold hover:bg-white/[0.1]">
+                  View submissions
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-            <div className="glass-card rounded-2xl p-5 min-w-60" style={{ border: "1px solid rgba(124,58,237,0.2)", background: "rgba(124,58,237,0.06)" }}>
+            <div className="rounded-2xl p-5 min-w-72 bg-white/[0.06] border border-white/10 backdrop-blur-xl">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
                   <Building2 className="w-5 h-5 text-primary" />
@@ -63,7 +73,7 @@ export default function RepDashboard() {
 
         {/* Access Restriction Notice */}
         <div
-          className="glass-card rounded-xl p-4 flex items-start gap-3 text-sm"
+          className="glass-card rounded-2xl p-4 flex items-start gap-3 text-sm border-l-4 border-primary"
           style={{ border: "1px solid rgba(124,58,237,0.15)", background: "rgba(124,58,237,0.04)" }}
         >
           <Lock className="w-4 h-4 text-primary shrink-0 mt-0.5" />
@@ -75,14 +85,15 @@ export default function RepDashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-          <StatsCard title="Programs Imported" value={215} icon={Table2} trend="+147 this month" trendUp={true} color="blue" />
+          <StatsCard title="Programs Linked" value={215} icon={Table2} trend="+147 source records" trendUp={true} color="blue" />
           <StatsCard title="Published" value={132} icon={CheckCircle} trend="Live for students" trendUp={true} color="green" />
-          <StatsCard title="Pending Review" value={80} icon={Clock} trend="3 import batches" color="amber" />
+          <StatsCard title="Pending Review" value={80} icon={Clock} trend="3 source submissions" color="amber" />
           <StatsCard title="Rejected" value={3} icon={FileX} trend="Needs attention" color="red" />
         </div>
 
         {/* Alert: Pending import */}
-        <div className="glass-card rounded-2xl p-5 shadow-premium border-l-4 border-warning">
+        <div className="relative overflow-hidden glass-card rounded-2xl p-6 shadow-premium border border-warning/20">
+          <div className="absolute inset-y-0 left-0 w-1 bg-warning" />
           <div className="flex items-start gap-4">
             <div className="relative">
               <div className="absolute inset-0 bg-warning blur-lg opacity-20" />
@@ -91,15 +102,15 @@ export default function RepDashboard() {
               </div>
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-warning mb-1">Import Pending Admin Review</h3>
+              <h3 className="font-semibold text-warning mb-1">Program Source Pending Admin Review</h3>
               <p className="text-muted-foreground text-sm mb-3">
-                Your CSV import of 147 programs is waiting for admin approval. Program imports are verified before becoming visible to students.
+                A structured dataset containing 147 detected programs is waiting for Admin approval before publication.
               </p>
               <Link
                 to="/rep/imports"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-warning text-black rounded-xl hover:bg-warning/90 transition-all text-sm font-semibold"
               >
-                View Import Status
+                View Source Status
               </Link>
             </div>
           </div>
@@ -109,7 +120,7 @@ export default function RepDashboard() {
           {/* Recent Imports */}
           <div className="lg:col-span-2 glass-card rounded-2xl shadow-premium-lg overflow-hidden">
             <div className="p-5 border-b border-glass-border flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Recent Imports</h2>
+              <h2 className="text-xl font-semibold">Recent Source Submissions</h2>
               <Link to="/rep/history" className="text-sm text-primary hover:text-primary-hover font-semibold flex items-center gap-1 group">
                 View History
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -152,10 +163,10 @@ export default function RepDashboard() {
                     <Upload className="w-5 h-5 text-white" />
                   </div>
                 </div>
-                <h3 className="font-semibold mb-1">Import Programs</h3>
-                <p className="text-xs text-muted-foreground mb-4">Upload JSON/CSV or submit catalogue URL</p>
+                <h3 className="font-semibold mb-1">Submit Official Program Source</h3>
+                <p className="text-xs text-muted-foreground mb-4">Add a catalogue source or upload a structured dataset</p>
                 <Link to="/rep/imports" className="w-full flex items-center justify-center py-2.5 bg-white text-primary rounded-xl text-sm font-semibold hover:bg-white/90 transition-all">
-                  Start Import
+                  Submit Source
                 </Link>
               </div>
             </div>
@@ -192,7 +203,7 @@ export default function RepDashboard() {
                 <span className="text-3xl font-bold">91%</span>
                 <span className="text-sm text-success font-semibold">+6%</span>
               </div>
-              <p className="text-xs text-muted-foreground">Your imports have a high approval rate.</p>
+              <p className="text-xs text-muted-foreground">Your official source submissions have a high approval rate.</p>
             </div>
 
             <div className="glass-card rounded-2xl p-5 shadow-premium">
@@ -204,7 +215,7 @@ export default function RepDashboard() {
               </div>
               <h3 className="font-semibold mb-1">AI Assistant</h3>
               <p className="text-xs text-muted-foreground mb-3">Need help optimizing your program data?</p>
-              <button className="text-xs text-primary hover:text-primary-hover font-semibold flex items-center gap-1.5 group">
+              <button onClick={() => toast.info("AI assistant reviewed your data: add accreditation details and refresh the invalid intake source.")} className="text-xs text-primary hover:text-primary-hover font-semibold flex items-center gap-1.5 group">
                 Ask AI Assistant
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </button>

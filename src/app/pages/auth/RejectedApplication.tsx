@@ -1,17 +1,14 @@
 import { Link } from "react-router";
-import { Sparkles, XCircle, AlertTriangle, Edit, LogOut, Mail } from "lucide-react";
+import { XCircle, AlertTriangle, Edit, LogOut, Mail } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
+import { getCurrentRepresentativeApplication } from "../../lib/prototypeStore";
 
 export default function RejectedApplication() {
-  const rejectionReasons = [
-    {
-      issue: "Invalid authorization document",
-      details: "The uploaded authorization letter could not be verified. Please provide an official letter from your university with a verifiable signature."
-    },
-    {
-      issue: "Email domain mismatch",
-      details: "Your email domain does not match the official university domain. Please use your official university email address."
-    }
-  ];
+  const application = getCurrentRepresentativeApplication();
+  const rejectionReasons = [{
+    issue: "Admin feedback",
+    details: application?.rejectionReason || "Please review your application details and resubmit with verifiable information.",
+  }];
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-6">
@@ -23,15 +20,7 @@ export default function RejectedApplication() {
 
       <div className="relative w-full max-w-3xl">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-12">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-12" />
 
         {/* Main Card */}
         <div className="glass-card rounded-3xl p-10 shadow-premium-xl border-glow border-l-4 border-l-destructive mb-6">
@@ -102,19 +91,19 @@ export default function RejectedApplication() {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">University</span>
-                <span className="font-medium">Harvard University</span>
+                <span className="font-medium">{application?.universityName ?? "Not available"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Position</span>
-                <span className="font-medium">Director of Admissions</span>
+                <span className="font-medium">{application?.position ?? "Not available"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Submitted</span>
-                <span className="font-medium">May 28, 2026</span>
+                <span className="font-medium">{application ? new Date(application.submittedDate).toLocaleDateString() : "Not available"}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Reviewed</span>
-                <span className="font-medium">May 30, 2026</span>
+                <span className="font-medium">{application ? new Date(application.updatedAt).toLocaleDateString() : "Not available"}</span>
               </div>
             </div>
           </div>

@@ -69,7 +69,7 @@ export default function PreviewSubmission() {
                   Master's Degree
                 </div>
                 <h2 className="text-3xl font-bold mb-2">Master of Computer Science</h2>
-                <p className="text-indigo-100 text-lg">Massachusetts Institute of Technology (MIT)</p>
+                <p className="text-indigo-100 text-lg">Universiti Teknologi Malaysia (UTM)</p>
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default function PreviewSubmission() {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Location</p>
-                <p className="font-medium text-gray-900">Cambridge, USA</p>
+                <p className="font-medium text-gray-900">Johor Bahru, Malaysia</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ export default function PreviewSubmission() {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Tuition</p>
-                <p className="font-medium text-gray-900">$45k - $55k</p>
+                <p className="font-medium text-gray-900">RM 18k / year</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -109,7 +109,7 @@ export default function PreviewSubmission() {
               </div>
               <div>
                 <p className="text-xs text-gray-500">Intake</p>
-                <p className="font-medium text-gray-900">Fall 2026</p>
+                <p className="font-medium text-gray-900">September 2026</p>
               </div>
             </div>
           </div>
@@ -134,7 +134,7 @@ export default function PreviewSubmission() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <span>GRE General Test scores</span>
+                  <span>English language proficiency where applicable</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
@@ -172,7 +172,9 @@ export default function PreviewSubmission() {
                 <p className="text-sm text-gray-600">Program Overview</p>
               </div>
               <a
-                href="#"
+                href="https://www.utm.my/programmes/"
+                target="_blank"
+                rel="noreferrer"
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
                 View Source
@@ -186,7 +188,9 @@ export default function PreviewSubmission() {
                 <p className="text-sm text-gray-600">Tuition</p>
               </div>
               <a
-                href="#"
+                href="https://www.utm.my/fees/"
+                target="_blank"
+                rel="noreferrer"
                 className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
               >
                 View Source

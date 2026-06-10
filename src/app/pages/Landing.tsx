@@ -1,7 +1,10 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Sparkles, GraduationCap, Shield, Users, Zap, ArrowRight, ChevronRight } from "lucide-react";
+import { UniSenseLogo } from "../components/UniSenseLogo";
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated gradient orbs */}
@@ -14,28 +17,22 @@ export default function LandingPage() {
       {/* Top Navbar */}
       <nav className="relative z-20 glass-card border-b border-glass-border">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <UniSenseLogo className="w-56 h-16" />
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary blur-lg opacity-50" />
-              <div className="relative gradient-primary p-2 rounded-xl shadow-premium">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <span className="text-xl font-bold text-gradient-hero">UniSense</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/auth/login"
+            <button
+              type="button"
+              onClick={() => navigate("/auth/login")}
               className="px-5 py-2.5 glass-card border border-glass-border rounded-xl font-semibold text-sm hover:bg-primary/5 hover:border-primary/30 transition-all"
             >
               Login
-            </Link>
-            <Link
-              to="/auth/create-account"
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/auth/create-account")}
               className="px-5 py-2.5 gradient-primary text-white rounded-xl font-semibold text-sm shadow-premium hover:shadow-premium-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               Create Account
-            </Link>
+            </button>
           </div>
         </div>
       </nav>
@@ -53,10 +50,7 @@ export default function LandingPage() {
             <span className="text-sm font-medium text-muted-foreground">AI-Powered Education Platform</span>
           </div>
 
-          <h1 className="text-7xl font-bold mb-6 leading-tight">
-            Welcome to <br />
-            <span className="text-gradient-hero inline-block mt-2">UniSense</span>
-          </h1>
+          <UniSenseLogo className="w-full max-w-xl h-48 mx-auto mb-4" />
 
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
             Find the right university program with AI-powered guidance. The next-generation platform for managing university program data with verified, collaborative workflows.
@@ -64,20 +58,22 @@ export default function LandingPage() {
 
           {/* Primary CTAs */}
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link
-              to="/auth/login"
+            <button
+              type="button"
+              onClick={() => navigate("/auth/login")}
               className="flex items-center gap-2.5 px-8 py-4 gradient-primary text-white rounded-2xl font-semibold shadow-premium-lg hover:shadow-glow-strong hover:scale-[1.02] active:scale-[0.98] transition-all text-lg"
             >
               Login to Account
               <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/auth/create-account"
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/auth/create-account")}
               className="flex items-center gap-2.5 px-8 py-4 glass-card border border-glass-border rounded-2xl font-semibold hover:bg-primary/5 hover:border-primary/30 transition-all text-lg border-glow"
             >
               Create Account
               <ChevronRight className="w-5 h-5" />
-            </Link>
+            </button>
           </div>
 
           {/* Secondary links */}
@@ -98,7 +94,7 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
           {/* Rep Card */}
           <Link
-            to="/auth/role-selection"
+            to="/auth/login?role=representative"
             className="group relative glass-card rounded-3xl p-8 shadow-premium-lg glass-card-hover border-glow overflow-hidden"
           >
             <div className="absolute inset-0 gradient-card opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -111,10 +107,10 @@ export default function LandingPage() {
               </div>
               <h2 className="text-2xl font-semibold mb-3">University Representative</h2>
               <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                Apply to manage your university's program information. Submit official details, import program data, and keep records accurate.
+                Apply to manage one university, submit official source links, and keep source-derived program data accurate.
               </p>
               <ul className="space-y-2 mb-6">
-                {["Import program data via JSON/CSV/URL", "Submit official university details", "Track import & review status", "Requires admin verification"].map((item) => (
+                {["Submit catalogue sources or datasets", "Submit official university details", "Track verification status", "Requires admin verification"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     {item}
@@ -122,7 +118,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <div className="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all text-sm">
-                Apply as University Representative
+                University Representative Login
                 <ArrowRight className="w-4 h-4" />
               </div>
             </div>
@@ -130,7 +126,7 @@ export default function LandingPage() {
 
           {/* Admin Card */}
           <Link
-            to="/auth/login"
+            to="/auth/login?role=admin"
             className="group relative glass-card rounded-3xl p-8 shadow-premium-lg glass-card-hover border-glow overflow-hidden"
           >
             <div className="absolute inset-0 gradient-card opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -143,10 +139,10 @@ export default function LandingPage() {
               </div>
               <h2 className="text-2xl font-semibold mb-3">Administrator</h2>
               <p className="text-muted-foreground leading-relaxed text-sm mb-4">
-                Review and approve representative applications and program imports. Manage universities, users, and system analytics.
+                Review representative applications, official sources, and program source data. Manage universities, users, and analytics.
               </p>
               <ul className="space-y-2 mb-6">
-                {["Review representative applications", "Approve/reject program imports", "Manage universities & users", "View analytics & audit logs"].map((item) => (
+                {["Review representative applications", "Verify official program sources", "Manage universities & users", "View analytics & audit logs"].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <div className="w-1.5 h-1.5 rounded-full bg-accent-violet shrink-0" />
                     {item}

@@ -1,7 +1,10 @@
-import { Link } from "react-router";
-import { Sparkles, GraduationCap, Shield, ArrowRight, Users, Brain } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { GraduationCap, Shield, ArrowRight, Users, Brain } from "lucide-react";
+import { UniSenseLogo } from "../../components/UniSenseLogo";
 
 export default function Welcome() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated gradient orbs */}
@@ -14,19 +17,10 @@ export default function Welcome() {
       <div className="relative max-w-6xl mx-auto px-6 py-20">
         {/* Hero Section */}
         <div className="text-center mb-16">
+          <UniSenseLogo className="w-full max-w-xl h-48 mx-auto mb-4" />
           <div className="inline-flex items-center gap-3 mb-8 glass-card px-6 py-3 rounded-full border-glow">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary blur-xl opacity-50 animate-pulse" />
-              <div className="relative gradient-primary p-2.5 rounded-xl">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-            </div>
             <span className="text-sm font-medium text-muted-foreground">AI-Powered Education Platform</span>
           </div>
-
-          <h1 className="text-7xl font-bold mb-6 leading-tight">
-            <span className="text-gradient-hero">UniSense</span>
-          </h1>
 
           <p className="text-2xl text-foreground max-w-2xl mx-auto leading-relaxed mb-4">
             Find the right university program with AI-powered guidance
@@ -39,18 +33,20 @@ export default function Welcome() {
 
         {/* Main CTAs */}
         <div className="flex items-center justify-center gap-4 mb-20">
-          <Link
-            to="/auth/login"
+          <button
+            type="button"
+            onClick={() => navigate("/auth/login")}
             className="px-8 py-4 bg-white/5 text-foreground border border-glass-border rounded-xl hover:bg-white/10 transition-all font-semibold shadow-premium glass-card-hover"
           >
             Login
-          </Link>
-          <Link
-            to="/auth/create-account"
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/auth/create-account")}
             className="px-8 py-4 gradient-primary text-white rounded-xl hover:shadow-premium-lg transition-all font-semibold shadow-premium hover:scale-105"
           >
             Create Account
-          </Link>
+          </button>
         </div>
 
         {/* Role Cards */}

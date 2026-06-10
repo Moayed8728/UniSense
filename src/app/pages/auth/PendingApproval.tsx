@@ -1,7 +1,11 @@
 import { Link } from "react-router";
-import { Sparkles, Clock, CheckCircle, FileSearch, UserCheck, Shield, LogOut, Eye } from "lucide-react";
+import { Clock, CheckCircle, FileSearch, UserCheck, Shield, LogOut, Eye } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
+import { getCurrentRepresentativeApplication } from "../../lib/prototypeStore";
 
 export default function PendingApproval() {
+  const application = getCurrentRepresentativeApplication();
+  const status = application?.status ?? "pending";
   const timeline = [
     { label: "Account Created", status: "completed", date: "May 28, 2026" },
     { label: "Application Submitted", status: "completed", date: "May 28, 2026" },
@@ -20,29 +24,25 @@ export default function PendingApproval() {
 
       <div className="relative w-full max-w-3xl">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-12">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-12" />
 
         {/* Main Card */}
         <div className="glass-card rounded-3xl p-10 shadow-premium-xl border-glow mb-6">
           {/* Status Badge */}
           <div className="flex items-center justify-center mb-8">
             <div className="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-full border border-warning/30 bg-warning/5">
-              <Clock className="w-5 h-5 text-warning animate-pulse" />
-              <span className="font-semibold text-warning">Pending Review</span>
+              {status === "approved" ? <CheckCircle className="w-5 h-5 text-success" /> : <Clock className="w-5 h-5 text-warning animate-pulse" />}
+              <span className={`font-semibold ${status === "approved" ? "text-success" : status === "rejected" ? "text-destructive" : "text-warning"}`}>
+                {status === "approved" ? "Approved" : status === "rejected" ? "Rejected" : "Pending Review"}
+              </span>
             </div>
           </div>
 
           {/* Header */}
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3">Application Under Review</h2>
+            <h2 className="text-3xl font-bold mb-3">
+              {status === "approved" ? "Application Approved" : status === "rejected" ? "Application Needs Changes" : "Application Under Review"}
+            </h2>
             <p className="text-muted-foreground text-lg">
               Your University Representative application is being reviewed by our admin team
             </p>
@@ -106,19 +106,19 @@ export default function PendingApproval() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">University</span>
-                <span className="font-medium">Harvard University</span>
+                <span className="font-medium">{application?.universityName ?? "Not available"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Location</span>
-                <span className="font-medium">Cambridge, United States</span>
+                <span className="font-medium">{application ? `${application.city}, ${application.country}` : "Not available"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Position</span>
-                <span className="font-medium">Director of Admissions</span>
+                <span className="font-medium">{application?.position ?? "Not available"}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Submitted</span>
-                <span className="font-medium">May 28, 2026</span>
+                <span className="font-medium">{application ? new Date(application.submittedDate).toLocaleDateString() : "Not available"}</span>
               </div>
             </div>
           </div>

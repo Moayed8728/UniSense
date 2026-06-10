@@ -1,7 +1,12 @@
 import { AdminLayout } from "../../components/AdminLayout";
 import { StatusBadge } from "../../components/StatusBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  getOfficialSourceLinks,
+  PROTOTYPE_DATA_CHANGED_EVENT,
+  reviewOfficialSourceLink,
+} from "../../lib/prototypeStore";
 import { 
   Search,
   ExternalLink,
@@ -12,64 +17,32 @@ import {
 
 export default function SourceVerification() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sourceStatuses, setSourceStatuses] = useState<Record<string, "verified" | "invalid" | "pending">>({});
+  const [sources, setSources] = useState(getOfficialSourceLinks);
 
-  const sources = [
-    {
-      id: "SRC-001",
-      program: "Bachelor of Business Administration",
-      university: "Harvard University",
-      url: "https://harvard.edu/admissions/tuition/undergraduate",
-      category: "Tuition",
-      status: "pending" as const,
-      submittedBy: "John Smith",
-      submissionId: "SUB-002",
-    },
-    {
-      id: "SRC-002",
-      program: "Master of Data Analytics",
-      university: "MIT",
-      url: "https://mit.edu/programs/data-analytics",
-      category: "Program Overview",
-      status: "pending" as const,
-      submittedBy: "Sarah Johnson",
-      submissionId: "SUB-006",
-    },
-    {
-      id: "SRC-003",
-      program: "PhD in Quantum Computing",
-      university: "Stanford University",
-      url: "https://stanford.edu/programs/quantum-computing",
-      category: "Program Overview",
-      status: "verified" as const,
-      submittedBy: "David Chen",
-      submissionId: "SUB-007",
-    },
-    {
-      id: "SRC-004",
-      program: "Bachelor of Computer Engineering",
-      university: "UC Berkeley",
-      url: "https://berkeley.edu/tuition",
-      category: "Tuition",
-      status: "invalid" as const,
-      submittedBy: "Emily Brown",
-      submissionId: "SUB-008",
-    },
-  ];
+  useEffect(() => {
+    const sync = () => setSources(getOfficialSourceLinks());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   const filteredSources = sources.filter(source =>
-    source.program.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    source.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
     source.university.toLowerCase().includes(searchQuery.toLowerCase()) ||
     source.url.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const markSource = (id: string, status: "verified" | "invalid") => {
-    setSourceStatuses(prev => ({ ...prev, [id]: status }));
+    reviewOfficialSourceLink(id, status);
+    setSources(getOfficialSourceLinks());
     toast.success(`Source marked as ${status}`);
   };
 
   const getSourceStatus = (source: typeof sources[0]) => {
-    return sourceStatuses[source.id] || source.status;
+    return source.status;
   };
 
   return (
@@ -179,7 +152,7 @@ export default function SourceVerification() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-gray-900">{source.program}</h3>
+                        <h3 className="font-semibold text-gray-900">{source.description}</h3>
                         <StatusBadge status={getSourceStatus(source)} />
                       </div>
                       <p className="text-sm text-gray-600">{source.university}</p>
@@ -188,7 +161,7 @@ export default function SourceVerification() {
                         <span>•</span>
                         <span>Submitted by: {source.submittedBy}</span>
                         <span>•</span>
-                        <span>Submission ID: {source.submissionId}</span>
+                        <span>Source ID: {source.id}</span>
                       </div>
                     </div>
                   </div>

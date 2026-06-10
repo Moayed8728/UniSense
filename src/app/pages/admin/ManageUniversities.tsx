@@ -2,7 +2,7 @@ import { AdminLayout } from "../../components/AdminLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { useState } from "react";
 import { toast } from "sonner";
-import { 
+import {
   Search,
   Plus,
   Building2,
@@ -11,68 +11,17 @@ import {
   Eye,
   Power
 } from "lucide-react";
+import { universities as universityDatabase } from "../../data/programs";
 
 export default function ManageUniversities() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const universities = [
-    {
-      id: "UNI-001",
-      name: "Massachusetts Institute of Technology",
-      shortName: "MIT",
-      country: "United States",
-      city: "Cambridge",
-      website: "https://mit.edu",
-      programCount: 156,
-      status: "active" as const,
-      lastUpdated: "2026-05-28",
-    },
-    {
-      id: "UNI-002",
-      name: "Harvard University",
-      shortName: "Harvard",
-      country: "United States",
-      city: "Cambridge",
-      website: "https://harvard.edu",
-      programCount: 203,
-      status: "active" as const,
-      lastUpdated: "2026-05-29",
-    },
-    {
-      id: "UNI-003",
-      name: "Stanford University",
-      shortName: "Stanford",
-      country: "United States",
-      city: "Stanford",
-      website: "https://stanford.edu",
-      programCount: 178,
-      status: "active" as const,
-      lastUpdated: "2026-05-30",
-    },
-    {
-      id: "UNI-004",
-      name: "University of California, Berkeley",
-      shortName: "UC Berkeley",
-      country: "United States",
-      city: "Berkeley",
-      website: "https://berkeley.edu",
-      programCount: 142,
-      status: "active" as const,
-      lastUpdated: "2026-05-27",
-    },
-    {
-      id: "UNI-005",
-      name: "Oxford University",
-      shortName: "Oxford",
-      country: "United Kingdom",
-      city: "Oxford",
-      website: "https://ox.ac.uk",
-      programCount: 95,
-      status: "active" as const,
-      lastUpdated: "2026-05-25",
-    },
-  ];
+  const universities = universityDatabase.map((university) => ({
+    ...university,
+    status: "active" as const,
+    lastUpdated: "2026-05-30",
+  }));
 
   const filteredUniversities = universities.filter(uni =>
     uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -83,6 +32,9 @@ export default function ManageUniversities() {
   const handleToggleStatus = (id: string, currentStatus: string) => {
     toast.success(`University ${currentStatus === "active" ? "deactivated" : "activated"} successfully`);
   };
+
+  const handleView = (name: string) => toast.info(`Viewing ${name} record and ${universities.find((item) => item.name === name)?.programCount ?? 0} programs.`);
+  const handleEdit = (name: string) => toast.success(`${name} opened in edit mode.`);
 
   return (
     <AdminLayout>
@@ -219,12 +171,14 @@ export default function ManageUniversities() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <button
+                          onClick={() => handleView(university.name)}
                           className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                           title="View Details"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
                         <button
+                          onClick={() => handleEdit(university.name)}
                           className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                           title="Edit"
                         >

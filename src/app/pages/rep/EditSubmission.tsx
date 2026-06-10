@@ -8,8 +8,8 @@ export default function EditSubmission() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [sources, setSources] = useState([
-    { url: "https://stanford.edu/programs/ai-phd", description: "Official program page", category: "Program Overview" },
-    { url: "https://stanford.edu/tuition", description: "General tuition page", category: "Tuition" },
+    { url: "https://www.utm.my/programmes/", description: "Official UTM program page", category: "Program Overview" },
+    { url: "https://www.utm.my/fees/", description: "UTM tuition page", category: "Tuition" },
   ]);
 
   const rejectionReason = "Please provide more specific official source for tuition information. The current link redirects to a general page.";
@@ -77,13 +77,12 @@ export default function EditSubmission() {
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">University *</label>
-                  <select 
-                    defaultValue="Stanford University"
+                  <select
+                    defaultValue="Universiti Teknologi Malaysia"
+                    disabled
                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   >
-                    <option>MIT</option>
-                    <option>Harvard University</option>
-                    <option>Stanford University</option>
+                    <option>Universiti Teknologi Malaysia</option>
                   </select>
                 </div>
 

@@ -2,6 +2,7 @@ import { RepLayout } from "../../components/RepLayout";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { submitCatalogueImport } from "../../lib/prototypeStore";
 import {
   Upload,
   FileJson,
@@ -49,8 +50,10 @@ export default function ProgramImports() {
   };
 
   const handleSubmit = () => {
-    toast.success("Programs submitted for admin review!");
-    navigate("/rep/imported-programs");
+    if (!method) return;
+    submitCatalogueImport({ method, source: method === "url" ? url : uploadedFile ?? "uploaded-file" });
+    toast.success("Official program source submitted for Admin review!");
+    navigate("/rep/history");
   };
 
   const validationResults = [
@@ -67,8 +70,8 @@ export default function ProgramImports() {
       <div className="space-y-8 max-w-4xl">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold mb-2">Program Imports</h1>
-          <p className="text-muted-foreground">Upload university program data via JSON, CSV, or official catalogue URL.</p>
+          <h1 className="text-3xl font-bold mb-2">Program Catalogue Sources</h1>
+          <p className="text-muted-foreground">Manage official catalogue URLs and structured program datasets for your assigned university.</p>
         </div>
 
         {/* Info notice */}
@@ -78,9 +81,9 @@ export default function ProgramImports() {
         >
           <Info className="w-5 h-5 text-info shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Import Flow: </span>
-            Upload → Validate → Submit for Admin Review → Approval → Programs Published.
-            Imported programs are verified before becoming visible to students.
+            <span className="font-semibold text-foreground">Source Review Flow: </span>
+            Add source → Validate → Submit for Admin Review → Approval → Programs Published.
+            Admin verification is required before students can view this data.
           </div>
         </div>
 

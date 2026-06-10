@@ -1,7 +1,13 @@
 import { AdminLayout } from "../../components/AdminLayout";
 import { StatusBadge } from "../../components/StatusBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  CatalogueImport,
+  getCatalogueImports,
+  PROTOTYPE_DATA_CHANGED_EVENT,
+  reviewCatalogueImport,
+} from "../../lib/prototypeStore";
 import {
   Search,
   Eye,
@@ -19,46 +25,45 @@ import {
 type ImportStatus = "pending" | "approved" | "rejected";
 type ImportMethod = "json" | "csv" | "url";
 
-interface ProgramImport {
-  id: string;
-  university: string;
-  rep: string;
-  method: ImportMethod;
-  programCount: number;
-  issues: number;
-  completeness: number;
-  submittedDate: string;
-  status: ImportStatus;
-}
-
-const imports: ProgramImport[] = [
-  { id: "IMP-012", university: "Universiti Teknologi Malaysia", rep: "Ahmad Razak", method: "csv", programCount: 147, issues: 15, completeness: 90, submittedDate: "2026-05-30", status: "pending" },
-  { id: "IMP-011", university: "University of Malaya", rep: "Prof. James Lim", method: "json", programCount: 89, issues: 2, completeness: 98, submittedDate: "2026-05-29", status: "pending" },
-  { id: "IMP-010", university: "National University of Singapore", rep: "Dr. Sarah Chen", method: "url", programCount: 210, issues: 0, completeness: 100, submittedDate: "2026-05-28", status: "approved" },
-  { id: "IMP-009", university: "Universiti Teknologi MARA", rep: "Mr. Razali", method: "csv", programCount: 55, issues: 8, completeness: 82, submittedDate: "2026-05-25", status: "rejected" },
-  { id: "IMP-008", university: "Universiti Malaysia Sarawak", rep: "Dr. Lee Wei", method: "json", programCount: 42, issues: 1, completeness: 97, submittedDate: "2026-05-27", status: "pending" },
-];
+type ProgramImport = CatalogueImport;
 
 const methodIcon = { json: FileJson, csv: FileSpreadsheet, url: Link2 };
 const methodColor = { json: "text-accent-blue", csv: "text-success", url: "text-primary" };
 const methodBg = { json: "bg-accent-blue/10", csv: "bg-success/10", url: "bg-primary/10" };
 
 export default function AdminProgramImports() {
+  const [imports, setImports] = useState<ProgramImport[]>(getCatalogueImports);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | ImportStatus>("all");
+  const [universityFilter, setUniversityFilter] = useState("all");
   const [selected, setSelected] = useState<ProgramImport | null>(null);
   const [showConfirm, setShowConfirm] = useState<{ action: "approve" | "reject"; item: ProgramImport } | null>(null);
   const [rejectReason, setRejectReason] = useState("");
 
+  useEffect(() => {
+    const sync = () => setImports(getCatalogueImports());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
   const filtered = imports.filter((i) => {
     const matchSearch = i.university.toLowerCase().includes(search.toLowerCase()) || i.rep.toLowerCase().includes(search.toLowerCase()) || i.id.toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === "all" || i.status === filterStatus;
-    return matchSearch && matchStatus;
+    const matchUniversity = universityFilter === "all" || i.universityId === universityFilter;
+    return matchSearch && matchStatus && matchUniversity;
   });
 
   const handleAction = (action: "approve" | "reject") => {
+    if (!showConfirm) return;
+    reviewCatalogueImport(showConfirm.item.id, action === "approve" ? "approved" : "rejected", rejectReason);
+    setImports(getCatalogueImports());
     setShowConfirm(null);
     setSelected(null);
+    setRejectReason("");
     if (action === "approve") {
       toast.success("Import approved! Programs are now live for students.");
     } else {
@@ -73,15 +78,15 @@ export default function AdminProgramImports() {
         <div className="relative overflow-hidden glass-card rounded-3xl p-8 shadow-premium-xl border-glow">
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.08))" }} />
           <div className="relative">
-            <h1 className="text-3xl font-bold mb-2">Program Imports</h1>
-            <p className="text-muted-foreground">Review and approve program import batches submitted by university representatives.</p>
+            <h1 className="text-3xl font-bold mb-2">Program Source Review</h1>
+            <p className="text-muted-foreground">Review program batches grouped by their university parent record.</p>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-5">
           {[
-            { label: "Total Imports", value: imports.length, color: "text-foreground", icon: Upload, bg: "bg-primary/10", iconColor: "text-primary" },
+            { label: "Total Sources", value: imports.length, color: "text-foreground", icon: Upload, bg: "bg-primary/10", iconColor: "text-primary" },
             { label: "Pending Review", value: imports.filter(i => i.status === "pending").length, color: "text-warning", icon: AlertCircle, bg: "bg-warning/10", iconColor: "text-warning" },
             { label: "Approved", value: imports.filter(i => i.status === "approved").length, color: "text-success", icon: CheckCircle, bg: "bg-success/10", iconColor: "text-success" },
             { label: "Programs Queued", value: imports.filter(i => i.status === "pending").reduce((acc, i) => acc + i.programCount, 0), color: "text-accent-blue", icon: Building2, bg: "bg-accent-blue/10", iconColor: "text-accent-blue" },
@@ -103,12 +108,23 @@ export default function AdminProgramImports() {
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search imports..."
+                placeholder="Search program sources..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 glass-card border border-glass-border rounded-xl focus:outline-none focus:border-accent-violet/50 text-sm transition-all"
               />
             </div>
+            <select
+              value={universityFilter}
+              onChange={(event) => setUniversityFilter(event.target.value)}
+              className="px-3 py-2.5 glass-card border border-glass-border rounded-xl text-sm focus:outline-none focus:border-accent-violet/50"
+              aria-label="Filter imports by university"
+            >
+              <option value="all">All universities</option>
+              {imports.map((item) => (
+                <option key={item.universityId} value={item.universityId}>{item.university}</option>
+              ))}
+            </select>
             <div className="flex items-center gap-2">
               {(["all", "pending", "approved", "rejected"] as const).map((s) => (
                 <button
@@ -144,7 +160,10 @@ export default function AdminProgramImports() {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-2">
                           <Building2 className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm text-foreground">{item.university}</span>
+                          <div>
+                            <span className="text-sm text-foreground block">{item.university}</span>
+                            <span className="text-xs text-muted-foreground">{item.universityId}</span>
+                          </div>
                         </div>
                       </td>
                       <td className="px-5 py-4">
@@ -215,7 +234,7 @@ export default function AdminProgramImports() {
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-2xl font-bold mb-1">Import Details</h3>
-            <p className="text-muted-foreground text-sm mb-6">{selected.id} • {selected.university}</p>
+            <p className="text-muted-foreground text-sm mb-6">{selected.id} • {selected.university} • universityId: {selected.universityId}</p>
             <div className="grid grid-cols-2 gap-4 mb-6">
               {[
                 { label: "Representative", value: selected.rep },
@@ -262,8 +281,8 @@ export default function AdminProgramImports() {
             <h3 className="text-2xl font-bold mb-2">{showConfirm.action === "approve" ? "Approve Import?" : "Reject Import?"}</h3>
             <p className="text-muted-foreground mb-5">
               {showConfirm.action === "approve"
-                ? `Approving this import will publish ${showConfirm.item.programCount} programs from ${showConfirm.item.university} to the platform.`
-                : `Rejecting this import will notify the representative and allow them to fix and resubmit.`}
+                ? `Approving this verified source data will publish ${showConfirm.item.programCount} programs under ${showConfirm.item.university}.`
+                : `Rejecting this source review will notify the representative and allow them to correct the official source or dataset.`}
             </p>
             {showConfirm.action === "reject" && (
               <div className="mb-5">

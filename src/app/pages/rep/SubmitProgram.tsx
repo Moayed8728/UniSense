@@ -3,6 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import {
+  getProgramSubmissionDraft,
+  saveProgramSubmissionDraft,
+  submitProgramSubmission,
+} from "../../lib/prototypeStore";
+import {
   FileText,
   GraduationCap,
   DollarSign,
@@ -35,14 +40,51 @@ const steps = [
 export default function SubmitProgram() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>(1);
-  const [sources, setSources] = useState<SourceLink[]>([{ url: "", description: "", category: "Programme Overview" }]);
+  const savedDraft = getProgramSubmissionDraft();
+  const [submissionId, setSubmissionId] = useState(savedDraft.id);
+  const [formData, setFormData] = useState({
+    program: savedDraft.program ?? "",
+    degreeLevel: savedDraft.degreeLevel ?? "",
+    fieldOfStudy: savedDraft.fieldOfStudy ?? "",
+    country: savedDraft.country ?? "Malaysia",
+    city: savedDraft.city ?? "Skudai, Johor",
+    duration: savedDraft.duration ?? "",
+    intake: savedDraft.intake ?? "",
+    faculty: savedDraft.faculty ?? "",
+    requirements: savedDraft.requirements ?? "",
+    description: savedDraft.description ?? "",
+    tuitionMin: savedDraft.tuitionMin ?? "",
+    tuitionMax: savedDraft.tuitionMax ?? "",
+    currency: savedDraft.currency ?? "MYR",
+    feeNotes: savedDraft.feeNotes ?? "",
+  });
+  const [sources, setSources] = useState<SourceLink[]>(
+    savedDraft.sources?.length ? savedDraft.sources : [{ url: "", description: "", category: "Programme Overview" }]
+  );
 
   const addSource = () => setSources([...sources, { url: "", description: "", category: "Programme Overview" }]);
   const removeSource = (i: number) => setSources(sources.filter((_, idx) => idx !== i));
+  const updateSource = (index: number, field: keyof SourceLink, value: string) =>
+    setSources((current) => current.map((source, sourceIndex) => sourceIndex === index ? { ...source, [field]: value } : source));
+
+  const submissionData = { ...formData, sources };
 
   const handleSubmit = () => {
+    if (!formData.program || !formData.degreeLevel || !formData.fieldOfStudy) {
+      toast.error("Please complete the required program information.");
+      setCurrentStep(1);
+      return;
+    }
+    submitProgramSubmission({ ...submissionData, id: submissionId });
     toast.success("Program submitted for review!");
     navigate("/rep/submissions");
+  };
+
+  const handleSaveDraft = () => {
+    const saved = submitProgramSubmission({ ...submissionData, id: submissionId }, true);
+    setSubmissionId(saved.id);
+    saveProgramSubmissionDraft(saved);
+    toast.success("Draft saved!");
   };
 
   const inputCls = "w-full px-4 py-3 glass-card border border-input-border rounded-xl focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground/50 transition-all";
@@ -57,7 +99,7 @@ export default function SubmitProgram() {
         >
           <Lock className="w-4 h-4 text-primary shrink-0" />
           <span className="text-muted-foreground">
-            <span className="font-semibold text-foreground">Universiti Teknologi Malaysia</span> — You are authorized to submit programs for this university only.
+            <span className="font-semibold text-foreground">Universiti Teknologi Malaysia</span> - Use this form for a sourced program correction or exceptional update request only.
           </span>
         </div>
 
@@ -102,7 +144,7 @@ export default function SubmitProgram() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2">Degree Level *</label>
-                  <select className={inputCls}>
+                  <select value={formData.degreeLevel} onChange={(event) => setFormData({ ...formData, degreeLevel: event.target.value })} className={inputCls}>
                     <option value="">Select degree level</option>
                     {["Bachelor", "Master", "PhD", "Diploma", "Certificate"].map(d => <option key={d}>{d}</option>)}
                   </select>
@@ -110,20 +152,20 @@ export default function SubmitProgram() {
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Program Name *</label>
-                <input type="text" placeholder="e.g., Bachelor of Computer Science (Software Engineering)" className={inputCls} />
+                <input type="text" value={formData.program} onChange={(event) => setFormData({ ...formData, program: event.target.value })} placeholder="e.g., Bachelor of Computer Science (Software Engineering)" className={inputCls} />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Field of Study *</label>
-                <input type="text" placeholder="e.g., Computer Science, Engineering, Business" className={inputCls} />
+                <input type="text" value={formData.fieldOfStudy} onChange={(event) => setFormData({ ...formData, fieldOfStudy: event.target.value })} placeholder="e.g., Computer Science, Engineering, Business" className={inputCls} />
               </div>
               <div className="grid grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Country *</label>
-                  <input type="text" value="Malaysia" className={inputCls} />
+                  <input type="text" value={formData.country} onChange={(event) => setFormData({ ...formData, country: event.target.value })} className={inputCls} />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2">City *</label>
-                  <input type="text" value="Skudai, Johor" className={inputCls} />
+                  <input type="text" value={formData.city} onChange={(event) => setFormData({ ...formData, city: event.target.value })} className={inputCls} />
                 </div>
               </div>
             </div>
@@ -136,24 +178,24 @@ export default function SubmitProgram() {
               <div className="grid grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Program Duration *</label>
-                  <input type="text" placeholder="e.g., 4 years" className={inputCls} />
+                  <input type="text" value={formData.duration} onChange={(event) => setFormData({ ...formData, duration: event.target.value })} placeholder="e.g., 4 years" className={inputCls} />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2">Intake Period *</label>
-                  <input type="text" placeholder="e.g., September 2026" className={inputCls} />
+                  <input type="text" value={formData.intake} onChange={(event) => setFormData({ ...formData, intake: event.target.value })} placeholder="e.g., September 2026" className={inputCls} />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Faculty / Department *</label>
-                <input type="text" placeholder="e.g., Faculty of Computing" className={inputCls} />
+                <input type="text" value={formData.faculty} onChange={(event) => setFormData({ ...formData, faculty: event.target.value })} placeholder="e.g., Faculty of Computing" className={inputCls} />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Admission Requirements *</label>
-                <textarea rows={4} placeholder="List the admission requirements..." className={`${inputCls} resize-none`} />
+                <textarea rows={4} value={formData.requirements} onChange={(event) => setFormData({ ...formData, requirements: event.target.value })} placeholder="List the admission requirements..." className={`${inputCls} resize-none`} />
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Program Description *</label>
-                <textarea rows={5} placeholder="Provide a detailed description of the program..." className={`${inputCls} resize-none`} />
+                <textarea rows={5} value={formData.description} onChange={(event) => setFormData({ ...formData, description: event.target.value })} placeholder="Provide a detailed description of the program..." className={`${inputCls} resize-none`} />
               </div>
             </div>
           )}
@@ -172,22 +214,22 @@ export default function SubmitProgram() {
               <div className="grid grid-cols-3 gap-5">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Min. Tuition Fee *</label>
-                  <input type="number" placeholder="25000" className={inputCls} />
+                  <input type="number" value={formData.tuitionMin} onChange={(event) => setFormData({ ...formData, tuitionMin: event.target.value })} placeholder="25000" className={inputCls} />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2">Max. Tuition Fee *</label>
-                  <input type="number" placeholder="50000" className={inputCls} />
+                  <input type="number" value={formData.tuitionMax} onChange={(event) => setFormData({ ...formData, tuitionMax: event.target.value })} placeholder="50000" className={inputCls} />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-2">Currency *</label>
-                  <select className={inputCls}>
+                  <select value={formData.currency} onChange={(event) => setFormData({ ...formData, currency: event.target.value })} className={inputCls}>
                     {["MYR", "USD", "EUR", "GBP", "SGD"].map(c => <option key={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold mb-2">Fee Notes (optional)</label>
-                <textarea rows={3} placeholder="Any additional fee information, scholarships, or discounts..." className={`${inputCls} resize-none`} />
+                <textarea rows={3} value={formData.feeNotes} onChange={(event) => setFormData({ ...formData, feeNotes: event.target.value })} placeholder="Any additional fee information, scholarships, or discounts..." className={`${inputCls} resize-none`} />
               </div>
             </div>
           )}
@@ -207,7 +249,7 @@ export default function SubmitProgram() {
                 <span className="text-muted-foreground">Provide direct links to official UTM pages for faster admin verification. All data is verified before publication.</span>
               </div>
               <div className="space-y-4">
-                {sources.map((_, index) => (
+                {sources.map((source, index) => (
                   <div key={index} className="glass-card rounded-xl p-5 space-y-4 shadow-premium">
                     <div className="flex items-center justify-between">
                       <h4 className="font-semibold text-sm">Source Link {index + 1}</h4>
@@ -217,10 +259,10 @@ export default function SubmitProgram() {
                         </button>
                       )}
                     </div>
-                    <input type="url" placeholder="https://www.utm.my/programmes/..." className={inputCls} />
+                    <input type="url" value={source.url} onChange={(event) => updateSource(index, "url", event.target.value)} placeholder="https://www.utm.my/programmes/..." className={inputCls} />
                     <div className="grid grid-cols-2 gap-4">
-                      <input type="text" placeholder="e.g., Official tuition page" className={inputCls} />
-                      <select className={inputCls}>
+                      <input type="text" value={source.description} onChange={(event) => updateSource(index, "description", event.target.value)} placeholder="e.g., Official tuition page" className={inputCls} />
+                      <select value={source.category} onChange={(event) => updateSource(index, "category", event.target.value)} className={inputCls}>
                         {["Programme Overview", "Tuition", "Admission", "Intake", "Scholarships"].map(c => <option key={c}>{c}</option>)}
                       </select>
                     </div>
@@ -261,11 +303,11 @@ export default function SubmitProgram() {
               <div className="glass-card rounded-xl p-5 space-y-4 shadow-premium">
                 {[
                   { label: "University", value: "Universiti Teknologi Malaysia" },
-                  { label: "Program Name", value: "Bachelor of Computer Science (Software Engineering)" },
-                  { label: "Degree Level", value: "Bachelor" },
-                  { label: "Duration", value: "4 years" },
-                  { label: "Tuition Range", value: "MYR 25,000 – MYR 38,000 per year" },
-                  { label: "Official Sources", value: "2 source links added" },
+                  { label: "Program Name", value: formData.program || "Not provided" },
+                  { label: "Degree Level", value: formData.degreeLevel || "Not provided" },
+                  { label: "Duration", value: formData.duration || "Not provided" },
+                  { label: "Tuition Range", value: `${formData.currency} ${formData.tuitionMin || "0"} - ${formData.tuitionMax || "0"} per year` },
+                  { label: "Official Sources", value: `${sources.filter((source) => source.url).length} source links added` },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex items-start justify-between py-2 border-b border-glass-border last:border-0">
                     <span className="text-sm text-muted-foreground">{label}</span>
@@ -298,7 +340,7 @@ export default function SubmitProgram() {
             </div>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => toast.success("Draft saved!")}
+                onClick={handleSaveDraft}
                 className="px-5 py-2.5 glass-card border border-glass-border rounded-xl text-sm font-semibold hover:bg-primary/5 hover:border-primary/30 transition-all"
               >
                 Save Draft

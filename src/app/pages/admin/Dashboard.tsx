@@ -2,7 +2,8 @@ import { AdminLayout } from "../../components/AdminLayout";
 import { StatsCard } from "../../components/StatsCard";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Link } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getProgramSubmissions, PROTOTYPE_DATA_CHANGED_EVENT } from "../../lib/prototypeStore";
 import {
   Clock,
   CheckCircle,
@@ -13,94 +14,90 @@ import {
   Eye,
   TrendingUp,
   Users,
-  ClipboardCheck
+  ClipboardCheck,
+  ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 type FilterType = "all" | "pending" | "source-pending" | "high-priority" | "rejected" | "approved";
 
 export default function AdminDashboard() {
-  const [activeFilter, setActiveFilter] = useState<FilterType>("pending");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [universityFilter, setUniversityFilter] = useState("all");
 
-  const submissions = [
-    {
-      id: "SUB-002",
-      program: "Bachelor of Business Administration",
-      university: "Harvard University",
-      submittedBy: "John Smith",
-      actionType: "Create",
-      sourceStatus: "pending" as const,
-      submissionDate: "2026-05-28",
-      risk: "low",
-      completeness: 95,
-    },
-    {
-      id: "SUB-006",
-      program: "Master of Data Analytics",
-      university: "MIT",
-      submittedBy: "Sarah Johnson",
-      actionType: "Create",
-      sourceStatus: "pending" as const,
-      submissionDate: "2026-05-29",
-      risk: "medium",
-      completeness: 88,
-    },
-    {
-      id: "SUB-007",
-      program: "PhD in Quantum Computing",
-      university: "Stanford University",
-      submittedBy: "David Chen",
-      actionType: "Update",
-      sourceStatus: "verified" as const,
-      submissionDate: "2026-05-30",
-      risk: "low",
-      completeness: 98,
-    },
-    {
-      id: "SUB-008",
-      program: "Bachelor of Computer Engineering",
-      university: "UC Berkeley",
-      submittedBy: "Emily Brown",
-      actionType: "Create",
-      sourceStatus: "invalid" as const,
-      submissionDate: "2026-05-27",
-      risk: "high",
-      completeness: 75,
-    },
-  ];
+  const loadSubmissions = () => getProgramSubmissions()
+    .filter((submission) => submission.status !== "draft")
+    .map((submission) => ({
+      ...submission,
+      submissionDate: submission.submittedDate,
+      risk: submission.sourceStatus === "invalid" ? "high" : submission.sources.length ? "low" : "medium",
+      completeness: Math.round(([
+        submission.program, submission.degreeLevel, submission.fieldOfStudy, submission.duration,
+        submission.intake, submission.requirements, submission.description, submission.tuitionMin,
+        submission.tuitionMax, submission.sources[0]?.url,
+      ].filter(Boolean).length / 10) * 100),
+    }));
+  const [submissions, setSubmissions] = useState(loadSubmissions);
+
+  useEffect(() => {
+    const sync = () => setSubmissions(loadSubmissions());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   const filteredSubmissions = submissions.filter(sub => {
     const matchesFilter = 
       activeFilter === "all" ||
       (activeFilter === "pending" && sub.sourceStatus === "pending") ||
       (activeFilter === "source-pending" && sub.sourceStatus === "pending") ||
-      (activeFilter === "high-priority" && sub.risk === "high");
+      (activeFilter === "high-priority" && sub.risk === "high") ||
+      (activeFilter === "approved" && sub.status === "approved") ||
+      (activeFilter === "rejected" && sub.status === "rejected");
     
     const matchesSearch = 
       sub.program.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sub.university.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sub.submittedBy.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesUniversity = universityFilter === "all" || sub.universityId === universityFilter;
     
-    return matchesFilter && matchesSearch;
+    return matchesFilter && matchesSearch && matchesUniversity;
   });
 
   return (
     <AdminLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="relative overflow-hidden glass-card rounded-3xl p-10 shadow-premium-xl border-glow">
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-violet/20 to-accent-pink/20" />
-          <div className="absolute top-0 right-0 w-72 h-72 bg-accent-violet/30 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent-pink/20 rounded-full blur-[100px]" />
-          <div className="relative">
+        <div className="relative overflow-hidden rounded-3xl p-8 shadow-premium-xl border border-accent-violet/20 bg-[linear-gradient(120deg,rgba(32,24,53,0.96),rgba(20,19,35,0.96))]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_10%,rgba(139,92,246,0.28),transparent_34%)]" />
+          <div className="relative grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+            <div>
             <div className="inline-flex items-center gap-2 mb-4">
               <div className="w-2 h-2 bg-accent-violet rounded-full animate-pulse" />
-              <span className="text-sm text-muted-foreground font-medium">Live Updates Enabled</span>
+              <span className="text-xs uppercase tracking-[0.16em] text-accent-violet font-bold">Live operations</span>
             </div>
-            <h1 className="text-4xl font-bold mb-3">
-              <span className="text-gradient-hero">Admin</span> Review Queue
+            <h1 className="text-4xl xl:text-5xl font-bold mb-3 tracking-tight">
+              Verification <span className="text-gradient-hero">Command Center</span>
             </h1>
-            <p className="text-muted-foreground text-lg">Review and verify program submissions from university representatives</p>
+            <p className="text-muted-foreground text-lg max-w-2xl">Review representative access, official evidence, and university program data from one trusted workspace.</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 min-w-[320px]">
+              <Link to="/admin/rep-applications" className="rounded-2xl p-4 bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] transition-all">
+                <ShieldCheck className="w-5 h-5 text-success mb-3" />
+                <p className="text-2xl font-bold">{submissions.filter((item) => item.status === "pending").length}</p>
+                <p className="text-xs text-muted-foreground">Pending decisions</p>
+              </Link>
+              <Link to="/admin/submissions" className="rounded-2xl p-4 bg-accent-violet/10 border border-accent-violet/20 hover:bg-accent-violet/15 transition-all">
+                <ClipboardCheck className="w-5 h-5 text-accent-violet mb-3" />
+                <p className="text-sm font-semibold">Open queue</p>
+                <p className="text-xs text-muted-foreground mt-1">Review program records</p>
+                <ArrowRight className="w-4 h-4 text-accent-violet mt-3" />
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -108,21 +105,21 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <StatsCard
             title="Pending Submissions"
-            value={12}
+            value={submissions.filter((item) => item.status === "pending").length}
             icon={Clock}
             trend="4 today"
             color="amber"
           />
           <StatsCard
             title="Sources Pending Verification"
-            value={8}
+            value={submissions.filter((item) => item.sourceStatus === "pending").length}
             icon={AlertCircle}
             trend="2 urgent"
             color="blue"
           />
           <StatsCard
             title="Approved This Week"
-            value={23}
+            value={submissions.filter((item) => item.status === "approved").length}
             icon={CheckCircle}
             trend="+15% vs last week"
             trendUp={true}
@@ -130,7 +127,7 @@ export default function AdminDashboard() {
           />
           <StatsCard
             title="Rejected This Week"
-            value={3}
+            value={submissions.filter((item) => item.status === "rejected").length}
             icon={XCircle}
             trend="-2 vs last week"
             trendUp={true}
@@ -141,10 +138,24 @@ export default function AdminDashboard() {
         {/* Priority Queue */}
         <div className="glass-card rounded-2xl shadow-premium-lg overflow-hidden">
           <div className="p-6 border-b border-glass-border">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <h2 className="text-2xl font-semibold">Priority Review Queue</h2>
+            <div className="flex items-start justify-between flex-wrap gap-5">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-accent-violet font-bold mb-2">Operational queue</p>
+                <h2 className="text-2xl font-semibold">Priority Review Queue</h2>
+              </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-end gap-3 flex-wrap">
+                <select
+                  value={universityFilter}
+                  onChange={(event) => setUniversityFilter(event.target.value)}
+                  className="px-3 py-2.5 glass-card border border-glass-border rounded-xl text-sm focus:outline-none focus:border-primary/50"
+                  aria-label="Filter submissions by university"
+                >
+                  <option value="all">All universities</option>
+                  {Array.from(new Map(submissions.map((submission) => [submission.universityId, submission.university])).entries()).map(([id, name]) => (
+                    <option key={id} value={id}>{name}</option>
+                  ))}
+                </select>
                 {/* Filters */}
                 <div className="flex items-center gap-2">
                   {[
@@ -210,6 +221,7 @@ export default function AdminDashboard() {
                       <div>
                         <p className="font-semibold text-foreground mb-1">{submission.program}</p>
                         <p className="text-sm text-muted-foreground">{submission.university}</p>
+                        <p className="text-xs text-accent-blue mt-1">University ID: {submission.universityId}</p>
                         <p className="text-xs text-muted-foreground/70 mt-1">ID: {submission.id}</p>
                       </div>
                     </td>
@@ -251,6 +263,15 @@ export default function AdminDashboard() {
                 ))}
               </tbody>
             </table>
+            {filteredSubmissions.length === 0 && (
+              <div className="py-16 px-6 text-center border-t border-glass-border">
+                <div className="w-12 h-12 rounded-2xl bg-success/10 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-6 h-6 text-success" />
+                </div>
+                <h3 className="font-semibold text-lg">Queue is clear</h3>
+                <p className="text-sm text-muted-foreground mt-1">No records match the current filters.</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -282,8 +303,8 @@ export default function AdminDashboard() {
               </div>
             </div>
             <div>
-              <div className="font-semibold mb-0.5">Program Imports</div>
-              <div className="text-sm text-muted-foreground">5 imports pending</div>
+              <div className="font-semibold mb-0.5">Program Source Review</div>
+              <div className="text-sm text-muted-foreground">5 source datasets pending</div>
             </div>
           </Link>
           <Link

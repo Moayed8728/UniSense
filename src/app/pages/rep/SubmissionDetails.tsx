@@ -1,7 +1,7 @@
 import { RepLayout } from "../../components/RepLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Link, useParams } from "react-router";
-import { 
+import {
   ArrowLeft, 
   Edit, 
   Download, 
@@ -11,45 +11,33 @@ import {
   ExternalLink,
   AlertCircle
 } from "lucide-react";
+import { toast } from "sonner";
+import { downloadTextFile } from "../../lib/prototype";
+import { getProgramSubmission } from "../../lib/prototypeStore";
 
 export default function SubmissionDetails() {
   const { id } = useParams();
+  const storedSubmission = getProgramSubmission(id);
 
-  // Mock data - in real app this would be fetched
+  if (!storedSubmission) {
+    return (
+      <RepLayout>
+        <div className="glass-card rounded-2xl p-8">
+          <h1 className="text-2xl font-bold mb-2">Submission not found</h1>
+          <Link to="/rep/submissions" className="text-primary">Return to my submissions</Link>
+        </div>
+      </RepLayout>
+    );
+  }
+
   const submission = {
-    id: id || "SUB-003",
-    program: "PhD in Artificial Intelligence",
-    university: "Stanford University",
-    degreeLevel: "PhD",
-    fieldOfStudy: "Computer Science",
-    country: "United States",
-    city: "Stanford",
-    duration: "4-6 years",
-    intake: "Fall 2026",
-    tuitionMin: 52000,
-    tuitionMax: 58000,
-    currency: "USD",
-    description: "Advanced research program in artificial intelligence, machine learning, and deep learning.",
-    requirements: "Bachelor's degree in Computer Science or related field, GRE scores, Research proposal, Letters of recommendation",
-    status: "rejected" as const,
-    sourceStatus: "invalid" as const,
-    submittedDate: "2026-05-20",
-    reviewedDate: "2026-05-22",
-    adminFeedback: "Please provide more specific official source for tuition information. The current link redirects to a general page.",
-    sources: [
-      {
-        url: "https://stanford.edu/programs/ai-phd",
-        description: "Official program page",
-        category: "Program Overview",
-        status: "verified" as const,
-      },
-      {
-        url: "https://stanford.edu/tuition",
-        description: "General tuition page",
-        category: "Tuition",
-        status: "invalid" as const,
-      },
-    ],
+    ...storedSubmission,
+    reviewedDate: storedSubmission.status === "pending" || storedSubmission.status === "draft" ? undefined : storedSubmission.lastUpdated,
+    adminFeedback: storedSubmission.feedback,
+    sources: storedSubmission.sources.map((source) => ({
+      ...source,
+      status: storedSubmission.sourceStatus,
+    })),
   };
 
   const timeline = [
@@ -153,7 +141,16 @@ export default function SubmissionDetails() {
                   Edit & Resubmit
                 </Link>
               )}
-              <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">
+              <button
+                onClick={() => {
+                  downloadTextFile(
+                    `${submission.id}-summary.txt`,
+                    `${submission.program}\n${submission.university}\nStatus: ${submission.status}\n\n${submission.description}\n\nAdmin feedback: ${submission.adminFeedback}`,
+                  );
+                  toast.success("Submission summary downloaded.");
+                }}
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+              >
                 <Download className="w-4 h-4" />
                 Download Summary
               </button>
@@ -217,7 +214,7 @@ export default function SubmissionDetails() {
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Tuition Range</h3>
                   <p className="text-gray-900">
-                    {submission.currency} ${submission.tuitionMin.toLocaleString()} - ${submission.tuitionMax.toLocaleString()}
+                    {submission.currency} {Number(submission.tuitionMin || 0).toLocaleString()} - {Number(submission.tuitionMax || 0).toLocaleString()}
                   </p>
                 </div>
 

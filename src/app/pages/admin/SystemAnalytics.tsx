@@ -11,6 +11,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { downloadCsv } from "../../lib/prototype";
 
 export default function SystemAnalytics() {
   const submissionTrend = [
@@ -57,7 +58,18 @@ export default function SystemAnalytics() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">System Analytics</h1>
             <p className="text-gray-600">Comprehensive overview of platform metrics and performance</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium">
+          <button
+            onClick={() => downloadCsv("unisense-system-analytics.csv", [
+              ["Metric", "Value"],
+              ["Total Users", 1247],
+              ["Total Programs", 856],
+              ["Active Universities", 124],
+              ["Pending Submissions", 23],
+              ["Approval Rate", "92.8%"],
+              ["Source Accuracy", "88.4%"],
+            ])}
+            className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium"
+          >
             <Download className="w-5 h-5" />
             Export Report
           </button>

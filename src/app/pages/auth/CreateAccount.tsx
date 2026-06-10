@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
-import { Sparkles, User, Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, ArrowRight } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -46,15 +47,7 @@ export default function CreateAccount() {
 
       <div className="relative w-full max-w-lg">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-8" />
 
         {/* Create Account Card */}
         <div className="glass-card rounded-3xl p-8 shadow-premium-xl border-glow">
@@ -182,12 +175,13 @@ export default function CreateAccount() {
           </div>
 
           {/* Login Link */}
-          <Link
-            to="/auth/login"
+          <button
+            type="button"
+            onClick={() => navigate("/auth/login")}
             className="block w-full text-center py-3 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all font-semibold"
           >
             Sign In
-          </Link>
+          </button>
         </div>
 
         {/* Back to Home */}

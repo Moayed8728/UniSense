@@ -8,22 +8,24 @@ import {
   Eye,
   Lock,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const programs = [
-  { id: "UTM-001", name: "Bachelor of Computer Science (Software Engineering)", faculty: "Computing", level: "Bachelor", duration: "4 years", tuition: "RM 35,000 / year", status: "approved" as const, importDate: "2026-05-20" },
-  { id: "UTM-002", name: "Master of Computer Science", faculty: "Computing", level: "Master", duration: "2 years", tuition: "RM 18,000 / year", status: "approved" as const, importDate: "2026-05-20" },
-  { id: "UTM-003", name: "PhD in Artificial Intelligence", faculty: "Computing", level: "PhD", duration: "3-5 years", tuition: "RM 15,000 / year", status: "pending" as const, importDate: "2026-05-28" },
-  { id: "UTM-004", name: "Bachelor of Electrical Engineering", faculty: "Engineering", level: "Bachelor", duration: "4 years", tuition: "RM 38,000 / year", status: "approved" as const, importDate: "2026-05-15" },
-  { id: "UTM-005", name: "Master of Business Administration (MBA)", faculty: "Management", level: "Master", duration: "2 years", tuition: "RM 42,000 / year", status: "pending" as const, importDate: "2026-05-29" },
-  { id: "UTM-006", name: "Bachelor of Architecture", faculty: "Built Environment", level: "Bachelor", duration: "5 years", tuition: "RM 36,000 / year", status: "rejected" as const, importDate: "2026-05-10" },
-  { id: "UTM-007", name: "Doctor of Philosophy (Civil Engineering)", faculty: "Engineering", level: "PhD", duration: "3-5 years", tuition: "RM 16,000 / year", status: "approved" as const, importDate: "2026-05-18" },
-  { id: "UTM-008", name: "Master of Science (Data Science)", faculty: "Computing", level: "Master", duration: "2 years", tuition: "RM 20,000 / year", status: "pending" as const, importDate: "2026-05-30" },
+  { id: "UTM-001", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Bachelor of Computer Science (Software Engineering)", faculty: "Computing", level: "Bachelor", duration: "4 years", tuition: "RM 35,000 / year", status: "approved" as const, importDate: "2026-05-20" },
+  { id: "UTM-002", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Master of Computer Science", faculty: "Computing", level: "Master", duration: "2 years", tuition: "RM 18,000 / year", status: "approved" as const, importDate: "2026-05-20" },
+  { id: "UTM-003", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "PhD in Artificial Intelligence", faculty: "Computing", level: "PhD", duration: "3-5 years", tuition: "RM 15,000 / year", status: "pending" as const, importDate: "2026-05-28" },
+  { id: "UTM-004", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Bachelor of Electrical Engineering", faculty: "Engineering", level: "Bachelor", duration: "4 years", tuition: "RM 38,000 / year", status: "approved" as const, importDate: "2026-05-15" },
+  { id: "UTM-005", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Master of Business Administration (MBA)", faculty: "Management", level: "Master", duration: "2 years", tuition: "RM 42,000 / year", status: "pending" as const, importDate: "2026-05-29" },
+  { id: "UTM-006", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Bachelor of Architecture", faculty: "Built Environment", level: "Bachelor", duration: "5 years", tuition: "RM 36,000 / year", status: "rejected" as const, importDate: "2026-05-10" },
+  { id: "UTM-007", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Doctor of Philosophy (Civil Engineering)", faculty: "Engineering", level: "PhD", duration: "3-5 years", tuition: "RM 16,000 / year", status: "approved" as const, importDate: "2026-05-18" },
+  { id: "UTM-008", universityId: "utm", university: "Universiti Teknologi Malaysia", name: "Master of Science (Data Science)", faculty: "Computing", level: "Master", duration: "2 years", tuition: "RM 20,000 / year", status: "pending" as const, importDate: "2026-05-30" },
 ];
 
 export default function ImportedPrograms() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterLevel, setFilterLevel] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filtered = programs.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.faculty.toLowerCase().includes(search.toLowerCase());
@@ -38,10 +40,13 @@ export default function ImportedPrograms() {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Imported Programs</h1>
+            <h1 className="text-3xl font-bold mb-2">Programs Under My University</h1>
             <p className="text-muted-foreground">
-              Programs imported for Universiti Teknologi Malaysia.{" "}
+              Source-derived programs for Universiti Teknologi Malaysia.{" "}
               <span className="text-primary font-medium">Access restricted to your assigned university.</span>
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Programs are stored under your assigned university and are collected from verified official sources or structured datasets before Admin approval.
             </p>
           </div>
           <div
@@ -56,7 +61,7 @@ export default function ImportedPrograms() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-5">
           {[
-            { label: "Total Imported", value: programs.length, color: "text-foreground", bg: "bg-primary/10", accent: "text-primary" },
+            { label: "Total Programs", value: programs.length, color: "text-foreground", bg: "bg-primary/10", accent: "text-primary" },
             { label: "Published", value: programs.filter(p => p.status === "approved").length, color: "text-success", bg: "bg-success/10", accent: "text-success" },
             { label: "Pending Review", value: programs.filter(p => p.status === "pending").length, color: "text-warning", bg: "bg-warning/10", accent: "text-warning" },
             { label: "Rejected", value: programs.filter(p => p.status === "rejected").length, color: "text-destructive", bg: "bg-destructive/10", accent: "text-destructive" },
@@ -128,7 +133,7 @@ export default function ImportedPrograms() {
                         </div>
                         <div>
                           <p className="font-medium text-foreground text-sm leading-tight">{program.name}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{program.id}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{program.university} · {program.id}</p>
                         </div>
                       </div>
                     </td>
@@ -147,7 +152,7 @@ export default function ImportedPrograms() {
                       {new Date(program.importDate).toLocaleDateString()}
                     </td>
                     <td className="px-5 py-4">
-                      <button className="flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover font-semibold opacity-0 group-hover:opacity-100 transition-all">
+                      <button onClick={() => toast.info(`${program.name}: ${program.level}, ${program.duration}, ${program.tuition}`)} className="flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover font-semibold opacity-0 group-hover:opacity-100 transition-all">
                         <Eye className="w-4 h-4" />
                         View
                       </button>
@@ -164,7 +169,11 @@ export default function ImportedPrograms() {
               {[1, 2, 3].map((p) => (
                 <button
                   key={p}
-                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${p === 1 ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground glass-card"}`}
+                  onClick={() => {
+                    setCurrentPage(p);
+                    toast.info(`Page ${p} selected.`);
+                  }}
+                  className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${p === currentPage ? "bg-primary text-white" : "text-muted-foreground hover:text-foreground glass-card"}`}
                 >
                   {p}
                 </button>

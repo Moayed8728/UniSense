@@ -1,11 +1,21 @@
 import { Link, useNavigate } from "react-router";
-import { Sparkles, User, Building2, FileCheck, Check, ArrowRight, Edit } from "lucide-react";
+import { User, Building2, FileCheck, Check, ArrowRight, Edit } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
 import { toast } from "sonner";
+import { getCurrentRepresentativeApplication, getRepresentativeApplicationDraft, submitRepresentativeApplication } from "../../lib/prototypeStore";
 
 export default function ApplicationPreview() {
   const navigate = useNavigate();
+  const draft = getRepresentativeApplicationDraft();
+  const application = Object.keys(draft).length ? draft : getCurrentRepresentativeApplication() ?? {};
 
   const handleSubmit = () => {
+    if (!application.fullName || !application.email || !application.universityName) {
+      toast.error("Please complete the representative application first.");
+      navigate("/auth/apply-representative");
+      return;
+    }
+    submitRepresentativeApplication(application);
     toast.success("Application submitted! You'll be notified once reviewed.");
     navigate("/auth/pending");
   };
@@ -22,15 +32,7 @@ export default function ApplicationPreview() {
 
       <div className="relative w-full max-w-3xl mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-8" />
 
         {/* Header */}
         <div className="text-center mb-8">
@@ -67,7 +69,7 @@ export default function ApplicationPreview() {
                   <p className="text-sm text-muted-foreground">Your personal details</p>
                 </div>
               </div>
-              <button className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
+              <button onClick={() => navigate("/auth/apply-representative")} className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
                 <Edit className="w-4 h-4" />
                 Edit
               </button>
@@ -75,23 +77,23 @@ export default function ApplicationPreview() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Full Name</span>
-                <span className="font-medium">Dr. Sarah Johnson</span>
+                <span className="font-medium">{application.fullName || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Email</span>
-                <span className="font-medium">sarah.johnson@harvard.edu</span>
+                <span className="font-medium">{application.email || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Position</span>
-                <span className="font-medium">Director of Admissions</span>
+                <span className="font-medium">{application.position || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Department</span>
-                <span className="font-medium">Office of Admissions</span>
+                <span className="font-medium">{application.department || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Contact Number</span>
-                <span className="font-medium">+1 (617) 495-1000</span>
+                <span className="font-medium">{application.contactNumber || "Not provided"}</span>
               </div>
             </div>
           </div>
@@ -108,7 +110,7 @@ export default function ApplicationPreview() {
                   <p className="text-sm text-muted-foreground">Institution details</p>
                 </div>
               </div>
-              <button className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
+              <button onClick={() => navigate("/auth/apply-representative")} className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
                 <Edit className="w-4 h-4" />
                 Edit
               </button>
@@ -116,23 +118,23 @@ export default function ApplicationPreview() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">University Name</span>
-                <span className="font-medium">Harvard University</span>
+                <span className="font-medium">{application.universityName || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Location</span>
-                <span className="font-medium">Cambridge, United States</span>
+                <span className="font-medium">{application.city || "Not provided"}, {application.country || "Not provided"}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Official Website</span>
-                <a href="https://www.harvard.edu" className="font-medium text-primary hover:text-primary-hover">harvard.edu</a>
+                <a href={application.websiteUrl || "#"} target="_blank" rel="noreferrer" className="font-medium text-primary hover:text-primary-hover">{application.websiteUrl || "Not provided"}</a>
               </div>
               <div className="flex justify-between py-2 border-b border-glass-border">
                 <span className="text-muted-foreground">Contact Email</span>
-                <span className="font-medium">admissions@harvard.edu</span>
+                <span className="font-medium">{application.contactEmail || "Not provided"}</span>
               </div>
               <div className="flex flex-col py-2">
                 <span className="text-muted-foreground mb-1">Address</span>
-                <span className="font-medium">Massachusetts Hall, Cambridge, MA 02138</span>
+                <span className="font-medium">{application.address || "Not provided"}</span>
               </div>
             </div>
           </div>
@@ -149,7 +151,7 @@ export default function ApplicationPreview() {
                   <p className="text-sm text-muted-foreground">Verification documents</p>
                 </div>
               </div>
-              <button className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
+              <button onClick={() => navigate("/auth/apply-representative")} className="text-primary hover:text-primary-hover font-semibold text-sm flex items-center gap-1.5">
                 <Edit className="w-4 h-4" />
                 Edit
               </button>
@@ -161,7 +163,7 @@ export default function ApplicationPreview() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold">Authorization Letter</p>
-                  <p className="text-xs text-muted-foreground">harvard_authorization_2026.pdf</p>
+                  <p className="text-xs text-muted-foreground">{application.proofDocumentName || "No document selected"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 glass-card border border-glass-border rounded-xl">
@@ -170,7 +172,7 @@ export default function ApplicationPreview() {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold">Staff Profile Link</p>
-                  <p className="text-xs text-muted-foreground">harvard.edu/staff/sarah-johnson</p>
+                  <p className="text-xs text-muted-foreground">{application.officialSourceLink || "Not provided"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 glass-card border border-glass-border rounded-xl">

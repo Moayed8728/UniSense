@@ -1,5 +1,7 @@
 import { Link } from "react-router";
-import { Sparkles, MailCheck, RefreshCw } from "lucide-react";
+import { MailCheck, RefreshCw } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
+import { toast } from "sonner";
 
 export default function CheckEmail() {
   return (
@@ -10,15 +12,7 @@ export default function CheckEmail() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <Link to="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-60 animate-pulse" />
-            <div className="relative gradient-primary p-3 rounded-xl shadow-premium-lg">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink />
 
         <div className="glass-card rounded-3xl p-10 shadow-premium-xl border-glow text-center">
           <div className="relative mb-6 w-fit mx-auto">
@@ -40,7 +34,7 @@ export default function CheckEmail() {
             </p>
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all font-semibold mb-4">
+          <button onClick={() => toast.success("A new reset link has been sent.")} className="w-full flex items-center justify-center gap-2 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all font-semibold mb-4">
             <RefreshCw className="w-4 h-4" />
             Resend Reset Link
           </button>

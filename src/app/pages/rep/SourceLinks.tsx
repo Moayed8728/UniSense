@@ -1,26 +1,41 @@
 import { RepLayout } from "../../components/RepLayout";
 import { StatusBadge } from "../../components/StatusBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, Link2, ExternalLink, X, Globe, ShieldCheck, AlertCircle } from "lucide-react";
-
-const sourceLinks = [
-  { id: "SL-001", url: "https://www.utm.my/programmes/", description: "Official UTM Programmes Page", category: "Programme Overview", status: "verified" as const, addedDate: "2026-05-15", lastChecked: "2026-05-30" },
-  { id: "SL-002", url: "https://www.utm.my/fees/", description: "Tuition & Fees Schedule 2026", category: "Tuition", status: "verified" as const, addedDate: "2026-05-15", lastChecked: "2026-05-30" },
-  { id: "SL-003", url: "https://www.utm.my/admission/", description: "Admission Requirements Portal", category: "Admission", status: "pending" as const, addedDate: "2026-05-28", lastChecked: "-" },
-  { id: "SL-004", url: "https://www.utm.my/postgraduate/intake/", description: "Postgraduate Intake 2026", category: "Intake", status: "invalid" as const, addedDate: "2026-05-10", lastChecked: "2026-05-25" },
-  { id: "SL-005", url: "https://www.utm.my/scholarships/", description: "Scholarship & Financial Aid", category: "Scholarships", status: "verified" as const, addedDate: "2026-05-20", lastChecked: "2026-05-30" },
-];
+import {
+  addOfficialSourceLink,
+  getOfficialSourceLinks,
+  PROTOTYPE_DATA_CHANGED_EVENT,
+  removeOfficialSourceLink,
+} from "../../lib/prototypeStore";
 
 const categories = ["Programme Overview", "Tuition", "Admission", "Intake", "Scholarships", "Research", "Other"];
 
 export default function SourceLinks() {
+  const [sourceLinks, setSourceLinks] = useState(getOfficialSourceLinks);
   const [showModal, setShowModal] = useState(false);
   const [newUrl, setNewUrl] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newCat, setNewCat] = useState("Programme Overview");
 
+  useEffect(() => {
+    const sync = () => setSourceLinks(getOfficialSourceLinks());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
   const handleAdd = () => {
+    if (!newUrl || !newDesc) {
+      toast.error("Please enter a source URL and description.");
+      return;
+    }
+    addOfficialSourceLink({ url: newUrl, description: newDesc, category: newCat });
+    setSourceLinks(getOfficialSourceLinks());
     setShowModal(false);
     setNewUrl("");
     setNewDesc("");
@@ -32,15 +47,15 @@ export default function SourceLinks() {
       <div className="space-y-8 max-w-5xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Source Links</h1>
-            <p className="text-muted-foreground">Official source links for UTM programme data. Verified by admin team.</p>
+            <h1 className="text-3xl font-bold mb-2">Official Sources</h1>
+            <p className="text-muted-foreground">Official source links for UTM program data. Official source links are required for verification.</p>
           </div>
           <button
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 px-5 py-2.5 gradient-primary text-white rounded-xl font-semibold shadow-premium hover:shadow-premium-lg transition-all"
           >
             <Plus className="w-4 h-4" />
-            Add Source Link
+            Submit Source Update
           </button>
         </div>
 
@@ -51,8 +66,8 @@ export default function SourceLinks() {
         >
           <ShieldCheck className="w-5 h-5 text-info shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">Programme imports are verified before becoming visible to students.</span>{" "}
-            All source links undergo authenticity verification to ensure data integrity.
+            <span className="font-semibold text-foreground">Admin verification is required before students can view this data.</span>{" "}
+            Program data is collected from verified official sources.
           </p>
         </div>
 
@@ -99,7 +114,14 @@ export default function SourceLinks() {
                     </a>
                   </div>
                 </div>
-                <button className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/5">
+                <button
+                  onClick={() => {
+                    removeOfficialSourceLink(link.id);
+                    setSourceLinks(getOfficialSourceLinks());
+                    toast.success("Source link removed.");
+                  }}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/5"
+                >
                   <X className="w-4 h-4" />
                 </button>
               </div>

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
-import { Sparkles, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
 import { useState } from "react";
 
 export default function ResetPassword() {
@@ -26,15 +27,7 @@ export default function ResetPassword() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <Link to="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-60 animate-pulse" />
-            <div className="relative gradient-primary p-3 rounded-xl shadow-premium-lg">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink />
 
         <div className="glass-card rounded-3xl p-10 shadow-premium-xl border-glow">
           <div className="text-center mb-10">

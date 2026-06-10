@@ -12,8 +12,10 @@ import {
   AlertCircle,
   Edit,
 } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function MyUniversity() {
+  const navigate = useNavigate();
   return (
     <RepLayout>
       <div className="space-y-8 max-w-5xl">
@@ -51,7 +53,7 @@ export default function MyUniversity() {
                     Skudai, Johor, Malaysia
                   </p>
                 </div>
-                <button className="flex items-center gap-2 px-5 py-2.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all font-semibold text-sm">
+                <button onClick={() => navigate("/rep/update-requests")} className="flex items-center gap-2 px-5 py-2.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all font-semibold text-sm">
                   <AlertCircle className="w-4 h-4 text-warning" />
                   Request Update
                 </button>
@@ -96,7 +98,7 @@ export default function MyUniversity() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs text-muted-foreground font-medium mb-0.5">Official Website</p>
-                    <a href="#" className="text-sm text-primary hover:underline font-medium flex items-center gap-1.5">
+                    <a href="https://www.utm.my" target="_blank" rel="noreferrer" className="text-sm text-primary hover:underline font-medium flex items-center gap-1.5">
                       www.utm.my <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -187,7 +189,7 @@ export default function MyUniversity() {
                   <p className="text-xs text-muted-foreground mb-3">
                     University changes require admin approval before going live.
                   </p>
-                  <button className="text-xs font-semibold text-warning hover:underline">
+                  <button onClick={() => navigate("/rep/update-requests")} className="text-xs font-semibold text-warning hover:underline">
                     Submit Update Request →
                   </button>
                 </div>

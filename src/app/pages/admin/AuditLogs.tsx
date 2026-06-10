@@ -11,6 +11,7 @@ import {
   Power,
   UserPlus
 } from "lucide-react";
+import { downloadCsv } from "../../lib/prototype";
 
 type ActionType = "approve" | "reject" | "verify" | "invalidate" | "suspend" | "activate" | "create" | "update";
 
@@ -148,7 +149,13 @@ export default function AuditLogs() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Audit Logs</h1>
             <p className="text-gray-600">Complete traceability of all admin operations and system events</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium">
+          <button
+            onClick={() => downloadCsv("unisense-audit-logs.csv", [
+              ["Log ID", "Admin", "Target", "Action", "Reason", "Timestamp", "IP Address"],
+              ...filteredLogs.map((log) => [log.id, log.admin, `${log.targetType} ${log.targetId}`, log.actionType, log.reason, log.timestamp, log.ipAddress]),
+            ])}
+            className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium"
+          >
             <Download className="w-5 h-5" />
             Export Logs
           </button>

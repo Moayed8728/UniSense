@@ -3,6 +3,7 @@ import { StatusBadge } from "../../components/StatusBadge";
 import { Link, useParams, useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getProgramSubmission, reviewProgramSubmission } from "../../lib/prototypeStore";
 import { 
   ArrowLeft,
   ExternalLink,
@@ -24,36 +25,7 @@ export default function ReviewSubmission() {
     1: "pending",
   });
 
-  const submission = {
-    id: id || "SUB-002",
-    program: "Bachelor of Business Administration",
-    university: "Harvard University",
-    degreeLevel: "Bachelor",
-    fieldOfStudy: "Business Administration",
-    country: "United States",
-    city: "Cambridge",
-    duration: "4 years",
-    intake: "Fall 2026",
-    tuitionMin: 52000,
-    tuitionMax: 56000,
-    currency: "USD",
-    description: "Comprehensive undergraduate business program covering finance, marketing, operations, and strategic management.",
-    requirements: "High school diploma, SAT/ACT scores, Essays, Letters of recommendation, Extracurricular activities",
-    submittedBy: "John Smith",
-    submittedDate: "2026-05-28",
-    sources: [
-      {
-        url: "https://harvard.edu/programs/bba",
-        description: "Official BBA program page",
-        category: "Program Overview",
-      },
-      {
-        url: "https://harvard.edu/admissions/tuition/undergraduate",
-        description: "Undergraduate tuition information",
-        category: "Tuition",
-      },
-    ],
-  };
+  const submission = getProgramSubmission(id);
 
   const markSource = (index: number, status: "verified" | "invalid") => {
     setSourceStatuses(prev => ({ ...prev, [index]: status }));
@@ -61,6 +33,8 @@ export default function ReviewSubmission() {
   };
 
   const handleApprove = () => {
+    if (!submission) return;
+    reviewProgramSubmission(submission.id, "approved");
     toast.success("Submission approved successfully!");
     navigate("/admin");
   };
@@ -70,9 +44,22 @@ export default function ReviewSubmission() {
       toast.error("Please provide a rejection reason");
       return;
     }
+    if (!submission) return;
+    reviewProgramSubmission(submission.id, "rejected", rejectionReason);
     toast.success("Submission rejected. Representative will be notified.");
     navigate("/admin");
   };
+
+  if (!submission) {
+    return (
+      <AdminLayout>
+        <div className="glass-card rounded-2xl p-8">
+          <h1 className="text-2xl font-bold mb-2">Submission not found</h1>
+          <Link to="/admin" className="text-primary">Return to review queue</Link>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
@@ -148,7 +135,7 @@ export default function ReviewSubmission() {
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Tuition Range</h3>
                   <p className="text-gray-900">
-                    {submission.currency} ${submission.tuitionMin.toLocaleString()} - ${submission.tuitionMax.toLocaleString()}
+                    {submission.currency} {Number(submission.tuitionMin || 0).toLocaleString()} - {Number(submission.tuitionMax || 0).toLocaleString()}
                   </p>
                 </div>
 
@@ -263,7 +250,13 @@ export default function ReviewSubmission() {
                   Reject Submission
                 </button>
 
-                <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-amber-300 text-amber-700 rounded-xl hover:bg-amber-50 transition-colors font-medium">
+                <button
+                  onClick={() => {
+                    setRejectionReason("Please correct the highlighted source information and resubmit.");
+                    setShowRejectModal(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-amber-300 text-amber-700 rounded-xl hover:bg-amber-50 transition-colors font-medium"
+                >
                   <AlertCircle className="w-5 h-5" />
                   Request Correction
                 </button>

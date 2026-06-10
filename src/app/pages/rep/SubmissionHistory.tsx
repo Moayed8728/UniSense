@@ -1,20 +1,51 @@
 import { RepLayout } from "../../components/RepLayout";
 import { StatusBadge } from "../../components/StatusBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Download, Filter, Upload, RefreshCw, Link2 } from "lucide-react";
+import { useNavigate } from "react-router";
+import { downloadCsv } from "../../lib/prototype";
+import {
+  getCatalogueImports,
+  getOfficialSourceLinks,
+  getProgramSubmissions,
+  PROTOTYPE_DATA_CHANGED_EVENT,
+} from "../../lib/prototypeStore";
 
 type ActivityType = "import" | "update" | "source";
 
-const history = [
-  { id: "IMP-008", type: "import" as ActivityType, description: "Bulk CSV import: 147 programs", university: "UTM", status: "pending" as const, date: "2026-05-30", programs: 147 },
-  { id: "UPD-003", type: "update" as ActivityType, description: "Tuition fee update: BSc Computer Science", university: "UTM", status: "rejected" as const, date: "2026-05-18", programs: 1 },
-  { id: "SL-004", type: "source" as ActivityType, description: "Source link added: Postgraduate Intake 2026", university: "UTM", status: "invalid" as const, date: "2026-05-10", programs: 0 },
-  { id: "IMP-006", type: "import" as ActivityType, description: "JSON import: 23 computing programs", university: "UTM", status: "approved" as const, date: "2026-05-05", programs: 23 },
-  { id: "UPD-002", type: "update" as ActivityType, description: "University website URL updated", university: "UTM", status: "approved" as const, date: "2026-05-22", programs: 0 },
-  { id: "IMP-004", type: "import" as ActivityType, description: "URL crawl: Engineering faculty programs", university: "UTM", status: "approved" as const, date: "2026-04-28", programs: 45 },
-  { id: "SL-002", type: "source" as ActivityType, description: "Source link: Tuition & Fees 2026", university: "UTM", status: "verified" as const, date: "2026-05-15", programs: 0 },
-  { id: "IMP-003", type: "import" as ActivityType, description: "CSV import: Business programs batch", university: "UTM", status: "approved" as const, date: "2026-04-20", programs: 18 },
-];
+const loadHistory = () => [
+  ...getCatalogueImports()
+    .filter((item) => item.universityId === "utm")
+    .map((item) => ({
+      id: item.id,
+      type: "import" as ActivityType,
+      description: `${item.method.toUpperCase()} catalogue source: ${item.source}`,
+      university: "UTM",
+      status: item.status,
+      date: item.submittedDate,
+      programs: item.programCount,
+    })),
+  ...getProgramSubmissions().map((item) => ({
+    id: item.id,
+    type: "update" as ActivityType,
+    description: `${item.actionType} program: ${item.program || "Untitled draft"}`,
+    university: "UTM",
+    status: item.status,
+    date: item.lastUpdated,
+    programs: 1,
+  })),
+  ...getOfficialSourceLinks()
+    .filter((item) => item.universityId === "utm")
+    .map((item) => ({
+      id: item.id,
+      type: "source" as ActivityType,
+      description: `Source link: ${item.description}`,
+      university: "UTM",
+      status: item.status,
+      date: item.addedDate,
+      programs: 0,
+    })),
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 const typeIcon = {
   import: Upload,
@@ -23,14 +54,26 @@ const typeIcon = {
 };
 
 const typeLabel = {
-  import: "Program Import",
+  import: "Program Source Review",
   update: "Update Request",
   source: "Source Link",
 };
 
 export default function SubmissionHistory() {
+  const [history, setHistory] = useState(loadHistory);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const sync = () => setHistory(loadHistory());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   const filtered = history.filter((h) => {
     const matchSearch = h.description.toLowerCase().includes(search.toLowerCase()) || h.id.toLowerCase().includes(search.toLowerCase());
@@ -43,10 +86,16 @@ export default function SubmissionHistory() {
       <div className="space-y-8 max-w-5xl">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Submission History</h1>
-            <p className="text-muted-foreground">Complete history of imports, updates, and source links for UTM.</p>
+            <h1 className="text-3xl font-bold mb-2">Verification History</h1>
+            <p className="text-muted-foreground">Submissions & verification status for university updates, official sources, and program source data.</p>
           </div>
-          <button className="flex items-center gap-2 px-5 py-2.5 glass-card border border-glass-border rounded-xl font-semibold hover:bg-primary/5 hover:border-primary/30 transition-all text-sm">
+          <button
+            onClick={() => downloadCsv("unisense-submission-history.csv", [
+              ["ID", "Type", "Description", "Status", "Programs", "Date"],
+              ...filtered.map((item) => [item.id, typeLabel[item.type], item.description, item.status, item.programs, item.date]),
+            ])}
+            className="flex items-center gap-2 px-5 py-2.5 glass-card border border-glass-border rounded-xl font-semibold hover:bg-primary/5 hover:border-primary/30 transition-all text-sm"
+          >
             <Download className="w-4 h-4" />
             Export CSV
           </button>
@@ -58,7 +107,7 @@ export default function SubmissionHistory() {
             { label: "Total Submissions", value: history.length, color: "text-foreground" },
             { label: "Approved", value: history.filter(h => h.status === "approved" || h.status === "verified").length, color: "text-success" },
             { label: "Pending", value: history.filter(h => h.status === "pending").length, color: "text-warning" },
-            { label: "Programs Imported", value: history.reduce((acc, h) => acc + h.programs, 0), color: "text-primary" },
+            { label: "Programs Detected", value: history.reduce((acc, h) => acc + h.programs, 0), color: "text-primary" },
           ].map(({ label, value, color }) => (
             <div key={label} className="glass-card rounded-2xl p-5 shadow-premium">
               <div className={`text-3xl font-bold ${color} mb-1`}>{value}</div>
@@ -88,7 +137,7 @@ export default function SubmissionHistory() {
                 className="text-sm glass-card border border-glass-border rounded-xl px-3 py-2.5 text-foreground focus:outline-none focus:border-primary/50"
               >
                 <option value="all">All Types</option>
-                <option value="import">Program Imports</option>
+                <option value="import">Catalogue Sources</option>
                 <option value="update">Update Requests</option>
                 <option value="source">Source Links</option>
               </select>
@@ -139,7 +188,10 @@ export default function SubmissionHistory() {
                         {new Date(item.date).toLocaleDateString()}
                       </td>
                       <td className="px-5 py-4">
-                        <button className="text-xs text-primary hover:text-primary-hover font-semibold opacity-0 group-hover:opacity-100 transition-all">
+                        <button
+                          onClick={() => navigate(item.type === "import" ? "/rep/imports" : item.type === "update" ? "/rep/update-requests" : "/rep/source-links")}
+                          className="text-xs text-primary hover:text-primary-hover font-semibold opacity-0 group-hover:opacity-100 transition-all"
+                        >
                           View →
                         </button>
                       </td>

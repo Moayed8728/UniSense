@@ -3,6 +3,7 @@ import { StatusBadge } from "../../components/StatusBadge";
 import { useState } from "react";
 import { toast } from "sonner";
 import { User, Mail, Phone, Building2, ShieldCheck, Edit, Save, Lock, Bell, Key } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function Profile() {
   const [editing, setEditing] = useState(false);
@@ -10,6 +11,8 @@ export default function Profile() {
   const [position, setPosition] = useState("Director of Academic Affairs");
   const [department, setDepartment] = useState("Academic Affairs Office");
   const [phone, setPhone] = useState("+607-553 1234");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const navigate = useNavigate();
 
   const handleSave = () => {
     setEditing(false);
@@ -167,22 +170,28 @@ export default function Profile() {
                 Security
               </h2>
               <div className="space-y-3">
-                <button className="w-full flex items-center justify-between px-4 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all group">
+                <button onClick={() => navigate("/auth/reset-password")} className="w-full flex items-center justify-between px-4 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all group">
                   <div className="flex items-center gap-3">
                     <Key className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Change Password</span>
                   </div>
                   <span className="text-xs text-primary opacity-0 group-hover:opacity-100 transition-opacity">Update →</span>
                 </button>
-                <button className="w-full flex items-center justify-between px-4 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all group">
+                <button
+                  onClick={() => {
+                    setNotificationsEnabled((enabled) => !enabled);
+                    toast.success(`Email notifications ${notificationsEnabled ? "disabled" : "enabled"}.`);
+                  }}
+                  className="w-full flex items-center justify-between px-4 py-3.5 glass-card border border-glass-border rounded-xl hover:bg-primary/5 hover:border-primary/30 transition-all group"
+                >
                   <div className="flex items-center gap-3">
                     <Bell className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Email Notifications</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-success font-medium">Enabled</span>
-                    <div className="w-8 h-4 rounded-full bg-success/20 border border-success/30 flex items-center pl-0.5">
-                      <div className="w-3 h-3 rounded-full bg-success ml-auto mr-0.5" />
+                    <span className={`text-xs font-medium ${notificationsEnabled ? "text-success" : "text-muted-foreground"}`}>{notificationsEnabled ? "Enabled" : "Disabled"}</span>
+                    <div className={`w-8 h-4 rounded-full border flex items-center px-0.5 ${notificationsEnabled ? "bg-success/20 border-success/30 justify-end" : "bg-muted border-glass-border justify-start"}`}>
+                      <div className={`w-3 h-3 rounded-full ${notificationsEnabled ? "bg-success" : "bg-muted-foreground"}`} />
                     </div>
                   </div>
                 </button>

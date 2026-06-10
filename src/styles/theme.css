@@ -351,6 +351,7 @@
   .border-glow::before {
     content: '';
     position: absolute;
+    pointer-events: none;
     inset: -1px;
     border-radius: inherit;
     padding: 1px;
@@ -365,5 +366,20 @@
 
   .border-glow:hover::before {
     opacity: 1;
+  }
+
+  .app-sidebar-scroll {
+    scrollbar-width: none;
+  }
+
+  .app-sidebar-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .workspace-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }

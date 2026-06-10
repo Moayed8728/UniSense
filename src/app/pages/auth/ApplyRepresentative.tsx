@@ -1,31 +1,42 @@
 import { Link, useNavigate } from "react-router";
-import { Sparkles, User, Mail, Phone, Building2, Globe, Upload, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { User, Mail, Phone, Building2, Globe, Upload, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { UniSenseBrandLink } from "../../components/UniSenseLogo";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  getCurrentRepresentativeApplication,
+  getRepresentativeApplicationDraft,
+  saveRepresentativeApplicationDraft,
+} from "../../lib/prototypeStore";
 
 export default function ApplyRepresentative() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => {
+    const saved = getRepresentativeApplicationDraft();
+    const current = getCurrentRepresentativeApplication();
+    const initial = Object.keys(saved).length ? saved : current ?? {};
+    return {
     // Representative Info
-    fullName: "",
-    email: "",
-    position: "",
-    department: "",
-    contactNumber: "",
+    fullName: initial.fullName ?? "",
+    email: initial.email ?? "",
+    position: initial.position ?? "",
+    department: initial.department ?? "",
+    contactNumber: initial.contactNumber ?? "",
     // University Info
-    universityName: "",
-    country: "",
-    city: "",
-    websiteUrl: "",
-    contactEmail: "",
-    address: "",
+    universityName: initial.universityName ?? "",
+    country: initial.country ?? "",
+    city: initial.city ?? "",
+    websiteUrl: initial.websiteUrl ?? "",
+    contactEmail: initial.contactEmail ?? "",
+    address: initial.address ?? "",
     // Authorization
     proofDocument: null as File | null,
-    verificationNote: "",
-    officialSourceLink: "",
-    confirmAuthorized: false
-  });
+    proofDocumentName: initial.proofDocumentName ?? "",
+    verificationNote: initial.verificationNote ?? "",
+    officialSourceLink: initial.officialSourceLink ?? "",
+    confirmAuthorized: initial.confirmAuthorized ?? false
+  }});
 
   const handleNext = () => {
     if (step < 4) setStep(step + 1);
@@ -37,7 +48,7 @@ export default function ApplyRepresentative() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, proofDocument: e.target.files[0] });
+      setFormData({ ...formData, proofDocument: e.target.files[0], proofDocumentName: e.target.files[0].name });
     }
   };
 
@@ -47,7 +58,11 @@ export default function ApplyRepresentative() {
       toast.error("Please confirm you are authorized to represent this university");
       return;
     }
-    toast.success("Application submitted successfully!");
+    saveRepresentativeApplicationDraft({
+      ...formData,
+      proofDocumentName: formData.proofDocument?.name ?? formData.proofDocumentName,
+    });
+    toast.success("Application details saved. Please review before final submission.");
     navigate("/auth/application-preview");
   };
 
@@ -64,15 +79,7 @@ export default function ApplyRepresentative() {
 
       <div className="relative w-full max-w-3xl mx-auto">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-primary blur-xl opacity-50" />
-            <div className="relative gradient-primary p-2.5 rounded-xl">
-              <Sparkles className="w-7 h-7 text-white" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gradient-hero">UniSense</h1>
-        </Link>
+          <UniSenseBrandLink className="w-72 h-24 mx-auto mb-8" />
 
         {/* Progress Bar */}
         <div className="mb-8">
@@ -284,7 +291,7 @@ export default function ApplyRepresentative() {
                       <Upload className="w-6 h-6 text-muted-foreground" />
                       <div className="text-center">
                         <p className="text-sm font-semibold">
-                          {formData.proofDocument ? formData.proofDocument.name : "Click to upload or drag and drop"}
+                          {formData.proofDocument?.name || formData.proofDocumentName || "Click to upload or drag and drop"}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">PDF, DOC, or Image (max 10MB)</p>
                       </div>

@@ -1,7 +1,13 @@
 import { AdminLayout } from "../../components/AdminLayout";
 import { StatusBadge } from "../../components/StatusBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  getRepresentativeApplications,
+  PROTOTYPE_DATA_CHANGED_EVENT,
+  RepresentativeApplication,
+  reviewRepresentativeApplication,
+} from "../../lib/prototypeStore";
 import {
   Search,
   Eye,
@@ -17,33 +23,51 @@ import {
 
 type AppStatus = "pending" | "approved" | "rejected";
 
-interface Application {
-  id: string;
+interface Application extends RepresentativeApplication {
   name: string;
-  email: string;
-  position: string;
   university: string;
-  country: string;
   website: string;
-  submittedDate: string;
-  status: AppStatus;
   completeness: number;
+  status: AppStatus;
 }
 
-const applications: Application[] = [
-  { id: "APP-001", name: "Dr. Aisha Rahman", email: "aisha@utm.my", position: "Dean of Computing", university: "Universiti Teknologi Malaysia", country: "Malaysia", website: "www.utm.my", submittedDate: "2026-05-28", status: "pending", completeness: 95 },
-  { id: "APP-002", name: "Prof. James Lim", email: "jlim@um.edu.my", position: "Head of Admissions", university: "University of Malaya", country: "Malaysia", website: "www.um.edu.my", submittedDate: "2026-05-27", status: "pending", completeness: 88 },
-  { id: "APP-003", name: "Dr. Sarah Chen", email: "sarah@nus.edu.sg", position: "Academic Registrar", university: "National University of Singapore", country: "Singapore", website: "www.nus.edu.sg", submittedDate: "2026-05-25", status: "approved", completeness: 100 },
-  { id: "APP-004", name: "Mr. Razali Hassan", email: "razali@uitm.edu.my", position: "Programme Coordinator", university: "Universiti Teknologi MARA", country: "Malaysia", website: "www.uitm.edu.my", submittedDate: "2026-05-22", status: "rejected", completeness: 65 },
-  { id: "APP-005", name: "Dr. Lee Wei Ming", email: "lwm@unimas.my", position: "Vice Dean", university: "Universiti Malaysia Sarawak", country: "Malaysia", website: "www.unimas.my", submittedDate: "2026-05-29", status: "pending", completeness: 92 },
-];
+const loadApplications = (): Application[] =>
+  getRepresentativeApplications()
+    .filter((application) => application.status !== "draft")
+    .map((application) => {
+      const fields = [
+        application.fullName, application.email, application.position, application.department,
+        application.contactNumber, application.universityName, application.country, application.city,
+        application.websiteUrl, application.contactEmail, application.address,
+        application.proofDocumentName, application.officialSourceLink,
+      ];
+      return {
+        ...application,
+        name: application.fullName,
+        university: application.universityName,
+        website: application.websiteUrl,
+        completeness: Math.round((fields.filter(Boolean).length / fields.length) * 100),
+        status: application.status as AppStatus,
+      };
+    });
 
 export default function RepApplications() {
+  const [applications, setApplications] = useState<Application[]>(loadApplications);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | AppStatus>("all");
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [showConfirm, setShowConfirm] = useState<{ action: "approve" | "reject"; app: Application } | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+
+  useEffect(() => {
+    const sync = () => setApplications(loadApplications());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   const filtered = applications.filter((a) => {
     const matchSearch =
@@ -55,8 +79,12 @@ export default function RepApplications() {
   });
 
   const handleAction = (action: "approve" | "reject") => {
+    if (!showConfirm) return;
+    reviewRepresentativeApplication(showConfirm.app.id, action === "approve" ? "approved" : "rejected", rejectReason);
+    setApplications(loadApplications());
     setShowConfirm(null);
     setSelectedApp(null);
+    setRejectReason("");
     if (action === "approve") {
       toast.success(`Application approved! Representative access granted.`);
     } else {

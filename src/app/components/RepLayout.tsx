@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { clearDemoSession } from "../lib/auth";
+import { UniSenseLogo } from "./UniSenseLogo";
 import {
   LayoutDashboard,
   Building2,
@@ -23,13 +25,13 @@ interface RepLayoutProps {
 }
 
 const navItems = [
-  { path: "/rep", label: "Overview", icon: LayoutDashboard, exact: true },
+  { path: "/rep", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/rep/university", label: "My University", icon: Building2 },
-  { path: "/rep/imports", label: "Program Imports", icon: Upload },
-  { path: "/rep/imported-programs", label: "Imported Programs", icon: Table2 },
+  { path: "/rep/source-links", label: "Official Sources", icon: Link2 },
+  { path: "/rep/imports", label: "Program Catalogue Sources", icon: Upload },
+  { path: "/rep/imported-programs", label: "Programs Under My University", icon: Table2 },
   { path: "/rep/update-requests", label: "Update Requests", icon: RefreshCw },
-  { path: "/rep/source-links", label: "Source Links", icon: Link2 },
-  { path: "/rep/history", label: "Submission History", icon: History },
+  { path: "/rep/history", label: "Verification History", icon: History },
   { path: "/rep/profile", label: "Profile", icon: User },
 ];
 
@@ -45,6 +47,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
 
   const handleLogout = () => {
     setShowLogoutModal(false);
+    clearDemoSession();
     toast.success("You have been logged out successfully.");
     navigate("/auth/login");
   };
@@ -55,29 +58,21 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
     <div className="min-h-screen flex" style={{ background: "var(--background)" }}>
       {/* Sidebar */}
       <aside
-        className="w-64 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40"
-        style={{ background: "var(--sidebar)", borderRight: "1px solid var(--sidebar-border)" }}
+        className="w-72 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40"
+        style={{ background: "linear-gradient(180deg, rgba(16,15,28,0.99), rgba(9,10,16,0.99))", borderRight: "1px solid rgba(124,58,237,0.16)" }}
       >
         {/* Logo */}
-        <div className="p-5 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
-          <Link to="/" className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary blur-lg opacity-50" />
-              <div className="relative gradient-primary p-2 rounded-xl shadow-premium">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            <div>
-              <div className="font-bold text-lg leading-none text-gradient-primary">UniSense</div>
-              <div className="text-xs text-muted-foreground mt-0.5">Rep Portal</div>
-            </div>
+        <div className="px-5 py-4 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
+          <Link to="/" className="block">
+            <UniSenseLogo className="h-14 w-full" />
+            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-2 pl-1">Representative Portal</div>
           </Link>
         </div>
 
         {/* University badge */}
-        <div className="px-3 pt-4">
+        <div className="px-3 pt-3">
           <div
-            className="px-4 py-3 rounded-xl"
+            className="px-3 py-2.5 rounded-xl"
             style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(124,58,237,0.15)" }}
           >
             <div className="flex items-center gap-3">
@@ -91,7 +86,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 mt-2.5">
+            <div className="flex items-center gap-1.5 mt-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-success" />
               <span className="text-xs text-success font-medium">Verified Representative</span>
             </div>
@@ -99,14 +94,18 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
         </div>
 
         {/* Nav items */}
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+        <nav className="app-sidebar-scroll flex-1 min-h-0 px-3 py-3 overflow-y-auto">
+          <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+            UniRep Pages
+          </div>
+          <div className="space-y-0.5">
           {navItems.map((item) => {
             const active = isActive(item.path, item.exact);
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-medium group ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-sm font-semibold group ${
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
                 style={
@@ -121,6 +120,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
               </Link>
             );
           })}
+          </div>
         </nav>
 
         {/* User + Logout */}
@@ -149,7 +149,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
       </aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col" style={{ marginLeft: "256px" }}>
+      <div className="flex-1 flex flex-col min-w-0 workspace-grid" style={{ marginLeft: "288px" }}>
         {/* Topbar */}
         <header
           className="sticky top-0 z-30 border-b px-8 py-4 flex items-center justify-between"
@@ -178,6 +178,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
               Verified Rep
             </div>
             <button
+              onClick={() => toast.info("You have 3 items awaiting admin review.")}
               className="relative p-2.5 rounded-xl transition-all hover:bg-primary/10"
               style={{ border: "1px solid var(--glass-border)" }}
             >
@@ -187,7 +188,9 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 p-8">{children}</main>
+        <main className="flex-1 p-8 xl:p-10">
+          <div className="max-w-[1600px] mx-auto">{children}</div>
+        </main>
       </div>
 
       {/* Logout Modal */}

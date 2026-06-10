@@ -1,72 +1,26 @@
 import { RepLayout } from "../../components/RepLayout";
 import { StatusBadge } from "../../components/StatusBadge";
 import { Link } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Filter, Eye, Edit, FileText } from "lucide-react";
+import { getProgramSubmissions, PROTOTYPE_DATA_CHANGED_EVENT } from "../../lib/prototypeStore";
 
 type FilterTab = "all" | "pending" | "approved" | "rejected" | "draft";
 
 export default function MySubmissions() {
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [submissions, setSubmissions] = useState(getProgramSubmissions);
 
-  const submissions = [
-    {
-      id: "SUB-001",
-      program: "Master of Computer Science",
-      university: "MIT",
-      actionType: "Create",
-      status: "approved" as const,
-      sourceStatus: "verified" as const,
-      submittedDate: "2026-05-25",
-      lastUpdated: "2026-05-28",
-      feedback: null,
-    },
-    {
-      id: "SUB-002",
-      program: "Bachelor of Business Administration",
-      university: "Harvard University",
-      actionType: "Create",
-      status: "pending" as const,
-      sourceStatus: "pending" as const,
-      submittedDate: "2026-05-28",
-      lastUpdated: "2026-05-28",
-      feedback: null,
-    },
-    {
-      id: "SUB-003",
-      program: "PhD in Artificial Intelligence",
-      university: "Stanford University",
-      actionType: "Update",
-      status: "rejected" as const,
-      sourceStatus: "invalid" as const,
-      submittedDate: "2026-05-20",
-      lastUpdated: "2026-05-22",
-      feedback: "Please provide more specific official source for tuition information",
-    },
-    {
-      id: "SUB-004",
-      program: "Master of Data Science",
-      university: "MIT",
-      actionType: "Create",
-      status: "draft" as const,
-      sourceStatus: "pending" as const,
-      submittedDate: "2026-05-30",
-      lastUpdated: "2026-05-30",
-      feedback: null,
-    },
-    {
-      id: "SUB-005",
-      program: "Bachelor of Engineering",
-      university: "Stanford University",
-      actionType: "Create",
-      status: "approved" as const,
-      sourceStatus: "verified" as const,
-      submittedDate: "2026-05-15",
-      lastUpdated: "2026-05-18",
-      feedback: null,
-    },
-  ];
+  useEffect(() => {
+    const sync = () => setSubmissions(getProgramSubmissions());
+    window.addEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(PROTOTYPE_DATA_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
 
   const filteredSubmissions = submissions.filter(sub => {
     const matchesFilter = activeFilter === "all" || sub.status === activeFilter;
@@ -88,8 +42,8 @@ export default function MySubmissions() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Submitted Programs</h1>
-          <p className="text-gray-600">Track and manage all your program submissions</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Submissions & Verification Status</h1>
+          <p className="text-gray-600">Track submissions for Universiti Teknologi Malaysia only.</p>
         </div>
 
         {/* Filters and Search */}

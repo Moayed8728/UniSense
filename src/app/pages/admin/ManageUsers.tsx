@@ -99,6 +99,10 @@ export default function ManageUsers() {
     toast.success(`${name} has been ${newStatus}`);
   };
 
+  const handleViewProfile = (name: string, email: string) => {
+    toast.info(`${name} profile opened (${email}).`);
+  };
+
   const getRoleIcon = (role: UserRole) => {
     switch (role) {
       case "student": return GraduationCap;
@@ -263,6 +267,7 @@ export default function ManageUsers() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <button
+                            onClick={() => handleViewProfile(user.name, user.email)}
                             className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                             title="View Profile"
                           >
