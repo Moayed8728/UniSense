@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import { ArrowLeft, Building2, CheckCircle2, ExternalLink, Globe, MapPin, BookOpen } from "lucide-react";
 import { StudentLayout } from "../../components/StudentLayout";
 import { ProgramCard } from "../../components/ProgramCard";
+import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import { getProgramsByUniversity, getUniversityById, universities } from "../../data/programs";
 import { StatusBadge } from "../../components/StatusBadge";
 
@@ -20,7 +21,11 @@ export default function UniversityDetails() {
 
         <section className="relative overflow-hidden glass-card rounded-3xl shadow-premium-lg border-glow">
           <div className="relative h-72">
-            <img src={university.image} alt={university.name} className="w-full h-full object-cover" />
+            <ImageWithFallback 
+              src={university.image} 
+              alt={university.name} 
+              className="w-full h-full object-cover" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-8">
               <div className="flex items-center gap-2 mb-3">

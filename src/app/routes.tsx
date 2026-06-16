@@ -32,6 +32,8 @@ import BrowsePrograms from "./pages/discover/Browse";
 import SmartSearch from "./pages/discover/SmartSearch";
 import ProgramDetails from "./pages/discover/ProgramDetails";
 import UniversityDetails from "./pages/discover/UniversityDetails";
+import Categories from "./pages/discover/Categories";
+import Deadlines from "./pages/discover/Deadlines";
 
 // Representative pages
 import RepDashboard from "./pages/rep/Dashboard";
@@ -117,6 +119,14 @@ export const router = createBrowserRouter([
   {
     path: "/universities/:id",
     Component: UniversityDetails,
+  },
+  {
+    path: "/categories",
+    Component: Categories,
+  },
+  {
+    path: "/deadlines",
+    Component: Deadlines,
   },
   {
     path: "/rep",

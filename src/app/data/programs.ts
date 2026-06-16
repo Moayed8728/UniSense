@@ -95,7 +95,7 @@ export const programs: Program[] = [
     rating: 4.7,
     viewCount: 12880,
     image:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80",
+      "https://picsum.photos/id/1018/1200/800",
     summary:
       "A four-year accredited engineering degree focusing on full-stack development, systems design, and a 16-month professional internship placement.",
     requirements: [
@@ -335,7 +335,7 @@ export const programs: Program[] = [
     rating: 4.6,
     viewCount: 8870,
     image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80",
+      "https://picsum.photos/id/1018/1200/800",
     summary:
       "An English-track undergraduate degree at Japan's premier research university, covering algorithms, AI, and human-computer interaction.",
     requirements: ["High school diploma", "EJU / SAT scores", "TOEFL 80+"],
@@ -669,7 +669,7 @@ const universityProfiles: Array<Omit<University, "programCount" | "mainFields">>
   { id: "eth", name: "ETH Zurich", shortName: "ETH Zurich", country: "Switzerland", city: "Zurich", verificationStatus: "verified", website: "https://ethz.ch", description: "A public research university specializing in science, technology, engineering, and mathematics.", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "ETH-S1", label: "Official Website", url: "https://ethz.ch", verificationStatus: "verified" }] },
   { id: "berkeley", name: "University of California, Berkeley", shortName: "UC Berkeley", country: "United States", city: "Berkeley", verificationStatus: "verified", website: "https://www.berkeley.edu", description: "A public research university with highly regarded programs and strong industry connections.", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "UCB-S1", label: "Official Website", url: "https://www.berkeley.edu", verificationStatus: "verified" }] },
   { id: "jhu", name: "Johns Hopkins University", shortName: "Johns Hopkins", country: "United States", city: "Baltimore", verificationStatus: "verified", website: "https://www.jhu.edu", description: "A research university known for medicine, public health, science, and engineering.", image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "JHU-S1", label: "Official Website", url: "https://www.jhu.edu", verificationStatus: "verified" }] },
-  { id: "utokyo", name: "University of Tokyo", shortName: "UTokyo", country: "Japan", city: "Tokyo", verificationStatus: "verified", website: "https://www.u-tokyo.ac.jp", description: "Japan's leading national research university with multidisciplinary academic programs.", image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "TOK-S1", label: "Official Website", url: "https://www.u-tokyo.ac.jp", verificationStatus: "verified" }] },
+  { id: "utokyo", name: "University of Tokyo", shortName: "UTokyo", country: "Japan", city: "Tokyo", verificationStatus: "verified", website: "https://www.u-tokyo.ac.jp", description: "Japan's leading national research university with multidisciplinary academic programs.", image: "https://picsum.photos/id/1018/1200/800", officialSources: [{ id: "TOK-S1", label: "Official Website", url: "https://www.u-tokyo.ac.jp", verificationStatus: "verified" }] },
   { id: "kth", name: "KTH Royal Institute of Technology", shortName: "KTH", country: "Sweden", city: "Stockholm", verificationStatus: "verified", website: "https://www.kth.se", description: "Sweden's largest technical university, focused on engineering and technology research.", image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "KTH-S1", label: "Official Website", url: "https://www.kth.se", verificationStatus: "verified" }] },
   { id: "tudelft", name: "Delft University of Technology", shortName: "TU Delft", country: "Netherlands", city: "Delft", verificationStatus: "verified", website: "https://www.tudelft.nl", description: "A technical university recognized for engineering, architecture, and design.", image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "DELFT-S1", label: "Official Website", url: "https://www.tudelft.nl", verificationStatus: "verified" }] },
   { id: "lse", name: "London School of Economics", shortName: "LSE", country: "United Kingdom", city: "London", verificationStatus: "verified", website: "https://www.lse.ac.uk", description: "A specialist social science university with globally focused economics, finance, and policy programs.", image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80", officialSources: [{ id: "LSE-S1", label: "Official Website", url: "https://www.lse.ac.uk", verificationStatus: "verified" }] },

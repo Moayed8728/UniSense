@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { Building2, CheckCircle2, MapPin, Search, ArrowRight, BookOpen } from "lucide-react";
 import { StudentLayout } from "../../components/StudentLayout";
+import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import { universities } from "../../data/programs";
 
 export default function Browse() {
@@ -74,7 +75,11 @@ export default function Browse() {
           {filteredUniversities.map((university) => (
             <article key={university.id} className="glass-card rounded-2xl overflow-hidden shadow-premium glass-card-hover border-glow flex flex-col">
               <div className="relative h-36 overflow-hidden">
-                <img src={university.image} alt={university.name} className="w-full h-full object-cover" />
+                <ImageWithFallback 
+                  src={university.image} 
+                  alt={university.name} 
+                  className="w-full h-full object-cover" 
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
                 <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/75 border border-success/30 text-success text-xs font-semibold backdrop-blur-sm">
                   <CheckCircle2 className="w-3.5 h-3.5" />

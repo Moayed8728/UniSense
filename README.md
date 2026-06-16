@@ -66,6 +66,8 @@ npm run build      # production build
 | 3.3 | Programme Discovery | Smart Search | `/smart-search` | [src/app/pages/discover/SmartSearch.tsx](src/app/pages/discover/SmartSearch.tsx) |
 | 3.4 | Programme Discovery | Program Details | `/programs/:id` | [src/app/pages/discover/ProgramDetails.tsx](src/app/pages/discover/ProgramDetails.tsx) |
 | 3.5 | Programme Discovery | University Details | `/universities/:id` | [src/app/pages/discover/UniversityDetails.tsx](src/app/pages/discover/UniversityDetails.tsx) |
+| 3.6 | Programme Discovery | Program Categories | `/categories` | [src/app/pages/discover/Categories.tsx](src/app/pages/discover/Categories.tsx) |
+| 3.7 | Programme Discovery | Upcoming Deadlines | `/deadlines` | [src/app/pages/discover/Deadlines.tsx](src/app/pages/discover/Deadlines.tsx) |
 
 ### 4 · University Representative
 
