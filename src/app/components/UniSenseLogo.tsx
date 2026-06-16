@@ -20,7 +20,7 @@ export function UniSenseLogo({ className = "", compact = false }: UniSenseLogoPr
       <img
         src={logo}
         alt="UniSense - Discover Your Path"
-        className={`h-full max-w-none object-contain object-left ${compact ? "w-auto" : "w-full"}`}
+        className={`h-full max-w-none object-contain object-center ${compact ? "w-auto" : "w-full"}`}
       />
     </div>
   );
