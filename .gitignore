@@ -1,3 +1,7 @@
 node_modules/
 .vite/
 *.log
+
+# Screenshot automation and assets (keep locally only for docs)
+screenshot_all.mjs
+screenshots/
