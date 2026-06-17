@@ -54,10 +54,10 @@ export default function ProgramDetails() {
     <StudentLayout>
       <div className="space-y-8">
         <Link
-          to="/discover"
+          to="/smart-search"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent-blue transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to search
+          <ArrowLeft className="w-4 h-4" /> Back to Smart Search
         </Link>
 
         {/* Hero */}

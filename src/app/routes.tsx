@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { Navigate, createBrowserRouter } from "react-router";
 
 import IntroSplash from "./pages/IntroSplash";
 
@@ -27,13 +27,10 @@ import AIAssistant from "./pages/student/AIAssistant";
 import AIRecommendations from "./pages/student/AIRecommendations";
 
 // Program discovery pages
-import DiscoverSearch from "./pages/discover/Search";
 import BrowsePrograms from "./pages/discover/Browse";
 import SmartSearch from "./pages/discover/SmartSearch";
 import ProgramDetails from "./pages/discover/ProgramDetails";
 import UniversityDetails from "./pages/discover/UniversityDetails";
-import Categories from "./pages/discover/Categories";
-import Deadlines from "./pages/discover/Deadlines";
 
 // Representative pages
 import RepDashboard from "./pages/rep/Dashboard";
@@ -102,7 +99,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/discover",
-    Component: DiscoverSearch,
+    Component: SmartSearch,
   },
   {
     path: "/browse",
@@ -122,11 +119,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/categories",
-    Component: Categories,
+    element: <Navigate to="/smart-search" replace />,
   },
   {
     path: "/deadlines",
-    Component: Deadlines,
+    element: <Navigate to="/student" replace />,
   },
   {
     path: "/rep",

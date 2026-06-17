@@ -81,7 +81,7 @@ export default function SavedPrograms() {
             <Heart className="w-14 h-14 text-primary mx-auto mb-5" />
             <h2 className="text-2xl font-bold mb-2">No saved programs yet</h2>
             <p className="text-muted-foreground mb-6">Save a program from search, university details, or recommendations.</p>
-            <Link to="/discover" className="inline-flex px-6 py-3 gradient-primary text-white rounded-xl font-semibold">Search Programs</Link>
+            <Link to="/smart-search" className="inline-flex px-6 py-3 gradient-primary text-white rounded-xl font-semibold">Smart Search</Link>
           </div>
         )}
       </div>

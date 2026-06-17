@@ -1,7 +1,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 16px;
+  --font-size: 14px;
 
   /* Premium Dark Background System */
   --background: #0a0a0f;
@@ -450,5 +450,307 @@
       linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
     background-size: 32px 32px;
+  }
+
+  @media (min-width: 1024px) {
+    .smart-sidebar {
+      overflow: visible;
+      box-shadow: 12px 0 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .smart-page {
+      transition: margin-left 300ms ease-out;
+    }
+
+    .smart-sidebar:hover + .smart-page,
+    .smart-sidebar:focus-within + .smart-page {
+      margin-left: 16rem !important;
+    }
+
+    .smart-sidebar-logo img {
+      transition: width 240ms ease, transform 240ms ease, object-position 240ms ease;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) .smart-sidebar-logo img {
+      width: auto !important;
+      object-position: left center;
+    }
+
+    .smart-sidebar:hover .smart-sidebar-logo img,
+    .smart-sidebar:focus-within .smart-sidebar-logo img {
+      width: 100% !important;
+      object-position: center;
+    }
+
+    .smart-sidebar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -18px;
+      width: 18px;
+      height: 100%;
+    }
+
+    .smart-sidebar .smart-sidebar-label {
+      white-space: nowrap;
+      opacity: 0;
+      max-width: 0;
+      overflow: hidden;
+      transition: opacity 180ms ease, max-width 240ms ease;
+    }
+
+    .smart-sidebar .smart-sidebar-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 2.25rem;
+      transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .smart-sidebar nav a,
+    .smart-sidebar > div:last-child button,
+    .smart-sidebar > div:last-child a {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    .smart-sidebar > .px-3.pt-3 > div {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    .smart-sidebar > .px-3.pt-3 > div > .flex > :first-child,
+    .smart-sidebar > div:last-child > div > :first-child {
+      width: 2.25rem !important;
+      height: 2.25rem !important;
+      flex: 0 0 2.25rem;
+    }
+
+    .smart-sidebar .smart-sidebar-icon svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .smart-sidebar:hover .smart-sidebar-label,
+    .smart-sidebar:focus-within .smart-sidebar-label {
+      opacity: 1;
+      max-width: 12rem;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) .smart-sidebar-label {
+      pointer-events: none;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) nav a,
+    .smart-sidebar:not(:hover):not(:focus-within) button,
+    .smart-sidebar:not(:hover):not(:focus-within) nav + div a {
+      justify-content: center;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) nav a[data-active="true"] {
+      background: transparent !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) nav a[data-active="true"] .smart-sidebar-icon {
+      background: color-mix(in srgb, currentColor 20%, transparent);
+      border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+      box-shadow: 0 0 18px color-mix(in srgb, currentColor 18%, transparent);
+    }
+
+    .smart-sidebar:hover .smart-sidebar-icon,
+    .smart-sidebar:focus-within .smart-sidebar-icon {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    .smart-sidebar:not(:hover):not(:focus-within) .glass-card,
+    .smart-sidebar:not(:hover):not(:focus-within) [class*="rounded-xl"] {
+      overflow: hidden;
+    }
+  }
+
+  .admin-console h1,
+  .admin-console h2,
+  .admin-console h3,
+  .admin-console .text-gray-900 {
+    color: var(--foreground) !important;
+  }
+
+  .admin-console .text-gray-700,
+  .admin-console .text-gray-600,
+  .admin-console .text-gray-500,
+  .admin-console .text-gray-400 {
+    color: var(--muted-foreground) !important;
+  }
+
+  .admin-console .bg-white,
+  .admin-console .bg-gray-50,
+  .admin-console .bg-gray-100,
+  .admin-console .bg-blue-50,
+  .admin-console .bg-purple-50,
+  .admin-console .bg-indigo-50,
+  .admin-console .bg-emerald-50,
+  .admin-console .bg-amber-50,
+  .admin-console .bg-red-50 {
+    background: rgba(18, 18, 26, 0.72) !important;
+  }
+
+  .admin-console .border-gray-100,
+  .admin-console .border-gray-200,
+  .admin-console .border-blue-200,
+  .admin-console .border-purple-200,
+  .admin-console .border-emerald-200,
+  .admin-console .border-red-200 {
+    border-color: var(--glass-border) !important;
+  }
+
+  .admin-console table tr,
+  .admin-console tbody,
+  .admin-console thead {
+    border-color: var(--glass-border) !important;
+  }
+
+  .admin-console tr:hover {
+    background: rgba(139, 92, 246, 0.08) !important;
+  }
+
+  .admin-console input,
+  .admin-console textarea,
+  .admin-console select {
+    background: var(--input-background) !important;
+    border-color: var(--input-border) !important;
+    color: var(--foreground) !important;
+  }
+
+  .admin-console input::placeholder,
+  .admin-console textarea::placeholder {
+    color: var(--muted-foreground) !important;
+  }
+
+  .admin-console .shadow-sm {
+    box-shadow: var(--shadow-md) !important;
+  }
+
+  .rep-console h1,
+  .rep-console h2,
+  .rep-console h3,
+  .rep-console .text-gray-900 {
+    color: var(--foreground) !important;
+  }
+
+  .rep-console .text-gray-700,
+  .rep-console .text-gray-600,
+  .rep-console .text-gray-500,
+  .rep-console .text-gray-400 {
+    color: var(--muted-foreground) !important;
+  }
+
+  @media (max-width: 640px) {
+    :root {
+      --font-size: 13px;
+    }
+
+    body {
+      background-size: auto;
+    }
+
+    main {
+      padding: 0.875rem !important;
+    }
+
+    header {
+      min-height: 3.5rem;
+    }
+
+    .glass-card {
+      border-radius: 1rem !important;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .p-10,
+    .p-8,
+    .p-6 {
+      padding: 1.125rem !important;
+    }
+
+    .p-5,
+    .p-4 {
+      padding: 0.875rem !important;
+    }
+
+    .gap-6 {
+      gap: 1rem !important;
+    }
+
+    .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 1rem !important;
+    }
+
+    .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+      margin-top: 0.875rem !important;
+    }
+
+    .text-4xl {
+      font-size: 1.75rem !important;
+      line-height: 1.15 !important;
+    }
+
+    .text-3xl {
+      font-size: 1.5rem !important;
+      line-height: 1.2 !important;
+    }
+
+    .text-2xl {
+      font-size: 1.25rem !important;
+      line-height: 1.25 !important;
+    }
+
+    .text-xl {
+      font-size: 1.125rem !important;
+    }
+
+    .text-lg {
+      font-size: 1rem !important;
+    }
+
+    .mobile-drawer svg,
+    main svg,
+    header svg,
+    button svg,
+    a svg {
+      width: 1rem !important;
+      height: 1rem !important;
+      min-width: 1rem;
+    }
+
+    .mobile-drawer {
+      width: min(18rem, 86vw) !important;
+    }
+
+    .mobile-drawer nav a {
+      padding: 0.625rem 0.75rem !important;
+      gap: 0.625rem !important;
+      border-radius: 0.75rem !important;
+    }
+
+    input,
+    select,
+    textarea,
+    button,
+    a {
+      min-height: 2.5rem;
+    }
+
+    table {
+      font-size: 0.8125rem;
+    }
   }
 }

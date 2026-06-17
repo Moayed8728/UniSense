@@ -30,7 +30,7 @@ export default function StudentDashboard() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <FeatureCard icon={Search} title="Search Programs" description="Search verified university programs by institution, field, country, tuition, and duration." action="Start Searching" onClick={() => navigate("/discover")} />
+          <FeatureCard icon={Search} title="Smart Search" description="Search verified university programs by institution, field, country, tuition, duration, and related academic terms." action="Start Searching" onClick={() => navigate("/smart-search")} />
           <FeatureCard icon={Sparkles} title="Recommended Programs" description="See programs from the UniSense database matched to your study preferences." action="View Recommendations" onClick={() => navigate("/student/recommendations")} violet />
         </div>
 

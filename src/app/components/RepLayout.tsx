@@ -57,17 +57,17 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
   const currentNav = navItems.find((item) => isActive(item.path, item.exact));
 
   return (
-    <div className="min-h-screen flex" style={{ background: "var(--background)" }}>
+    <div className="rep-console min-h-screen flex" style={{ background: "var(--background)" }}>
       {/* Desktop Sidebar */}
       <aside
-        className="w-72 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40 hidden lg:flex"
+        className="smart-sidebar w-[4.75rem] hover:w-64 focus-within:w-64 shrink-0 flex flex-col fixed top-0 left-0 bottom-0 z-40 hidden lg:flex overflow-hidden transition-[width] duration-300 ease-out"
         style={{ background: "linear-gradient(180deg, rgba(16,15,28,0.99), rgba(9,10,16,0.99))", borderRight: "1px solid rgba(124,58,237,0.16)" }}
       >
         {/* Logo */}
-        <div className="px-5 py-4 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
+        <div className="px-3 py-4 border-b" style={{ borderColor: "var(--sidebar-border)" }}>
           <Link to="/" className="block">
-            <UniSenseLogo className="h-14 w-full" />
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-2 pl-1">Representative Portal</div>
+            <UniSenseLogo className="smart-sidebar-logo h-16 w-full" />
+            <div className="smart-sidebar-label text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-2 pl-1">Representative Portal</div>
           </Link>
         </div>
 
@@ -81,7 +81,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
               <div className="w-9 h-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                 <Building2 className="w-4 h-4 text-primary" />
               </div>
-              <div className="min-w-0">
+              <div className="smart-sidebar-label min-w-0">
                 <div className="text-xs text-muted-foreground font-medium">Assigned University</div>
                 <div className="text-sm font-semibold text-foreground truncate leading-tight mt-0.5">
                   Universiti Teknologi Malaysia
@@ -90,14 +90,14 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
             </div>
             <div className="flex items-center gap-1.5 mt-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-success" />
-              <span className="text-xs text-success font-medium">Verified Representative</span>
+              <span className="smart-sidebar-label text-xs text-success font-medium">Verified Representative</span>
             </div>
           </div>
         </div>
 
         {/* Nav items */}
         <nav className="app-sidebar-scroll flex-1 min-h-0 px-3 py-3 overflow-y-auto">
-          <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="smart-sidebar-label px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
             UniRep Pages
           </div>
           <div className="space-y-0.5">
@@ -107,6 +107,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
               <Link
                 key={item.path}
                 to={item.path}
+                data-active={active ? "true" : "false"}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all text-sm font-semibold group ${
                   active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -116,9 +117,11 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
                     : { border: "1px solid transparent" }
                 }
               >
-                <item.icon className={`w-4 h-4 shrink-0 ${active ? "text-primary" : ""}`} />
-                <span className="flex-1">{item.label}</span>
-                {active && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
+                <span className="smart-sidebar-icon">
+                  <item.icon className={`w-5 h-5 shrink-0 ${active ? "text-primary" : ""}`} />
+                </span>
+                <span className="smart-sidebar-label flex-1">{item.label}</span>
+                {active && <div className="smart-sidebar-label w-1.5 h-1.5 rounded-full bg-primary" />}
               </Link>
             );
           })}
@@ -134,7 +137,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
             <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center text-white text-xs font-bold shrink-0">
               AR
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="smart-sidebar-label min-w-0 flex-1">
               <div className="text-sm font-medium truncate">Ahmad Razak</div>
               <div className="text-xs text-muted-foreground truncate">rep@unisense.com</div>
             </div>
@@ -144,8 +147,8 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
             className="flex items-center gap-3 px-3 py-2.5 w-full text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl transition-all text-sm font-medium"
             style={{ border: "1px solid transparent" }}
           >
-            <LogOut className="w-4 h-4" />
-            Logout
+            <span className="smart-sidebar-icon"><LogOut className="w-5 h-5" /></span>
+            <span className="smart-sidebar-label">Logout</span>
           </button>
         </div>
       </aside>
@@ -169,7 +172,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
         <div className="lg:hidden fixed inset-0 z-[60] flex">
           <div className="fixed inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
           <div
-            className="relative w-72 max-w-[80%] h-full flex flex-col"
+            className="mobile-drawer relative w-72 max-w-[80%] h-full flex flex-col"
             style={{ background: "linear-gradient(180deg, rgba(16,15,28,0.99), rgba(9,10,16,0.99))", borderRight: "1px solid rgba(124,58,237,0.16)" }}
           >
             <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: "var(--sidebar-border)" }}>
@@ -264,7 +267,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
       )}
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-[288px] pt-14 lg:pt-0">
+      <div className="smart-page flex-1 flex flex-col min-w-0 lg:ml-[4.75rem] pt-14 lg:pt-0">
         {/* Topbar */}
         <header
           className="sticky top-0 z-30 border-b px-4 lg:px-8 py-4 flex items-center justify-between"
@@ -303,7 +306,7 @@ export function RepLayout({ children, pageTitle }: RepLayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-6 lg:p-8 xl:p-10">
+        <main className="flex-1 p-4 md:p-5 lg:p-6 xl:p-7">
           <div className="max-w-[1600px] mx-auto">{children}</div>
         </main>
       </div>

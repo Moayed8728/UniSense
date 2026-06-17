@@ -68,7 +68,7 @@ export default function Browse() {
           <p className="text-muted-foreground">
             <span className="text-foreground font-semibold">{filteredUniversities.length}</span> universities
           </p>
-          <Link to="/discover" className="text-sm text-accent-blue hover:underline">Search all programs instead</Link>
+          <Link to="/smart-search" className="text-sm text-accent-blue hover:underline">Smart Search programs instead</Link>
         </div>
 
         <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
