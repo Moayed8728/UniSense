@@ -47,10 +47,6 @@ export default function RepDashboard() {
                   <Upload className="w-4 h-4" />
                   Submit official source
                 </Link>
-                <Link to="/rep/submissions" className="inline-flex items-center gap-2 px-5 py-3 bg-white/[0.06] border border-white/10 rounded-xl font-semibold hover:bg-white/[0.1]">
-                  View submissions
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
               </div>
             </div>
             <div className="rounded-2xl p-5 min-w-72 bg-white/[0.06] border border-white/10 backdrop-blur-xl">
