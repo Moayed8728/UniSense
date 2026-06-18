@@ -62,7 +62,7 @@ export interface CatalogueImport {
   universityId: string;
   university: string;
   rep: string;
-  method: "json" | "csv" | "url";
+  method: "json" | "csv" | "url" | "coverage";
   source: string;
   programCount: number;
   issues: number;
@@ -311,7 +311,7 @@ export const getCatalogueImports = () => {
   return seedImports;
 };
 
-export const submitCatalogueImport = (input: Pick<CatalogueImport, "method" | "source">) => {
+export const submitCatalogueImport = (input: Pick<CatalogueImport, "method" | "source"> & Partial<Pick<CatalogueImport, "programCount" | "issues" | "completeness">>) => {
   const record: CatalogueImport = {
     id: nextId("IMP"),
     universityId: "utm",
@@ -319,9 +319,9 @@ export const submitCatalogueImport = (input: Pick<CatalogueImport, "method" | "s
     rep: "Ahmad Razak",
     method: input.method,
     source: input.source,
-    programCount: 147,
-    issues: 15,
-    completeness: 90,
+    programCount: input.programCount ?? 147,
+    issues: input.issues ?? 15,
+    completeness: input.completeness ?? 90,
     submittedDate: now(),
     status: "pending",
   };

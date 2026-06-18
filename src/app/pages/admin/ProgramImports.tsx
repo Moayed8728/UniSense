@@ -17,19 +17,20 @@ import {
   Building2,
   FileJson,
   FileSpreadsheet,
+  Layers3,
   Link2,
   X,
   AlertCircle,
 } from "lucide-react";
 
 type ImportStatus = "pending" | "approved" | "rejected";
-type ImportMethod = "json" | "csv" | "url";
+type ImportMethod = "json" | "csv" | "url" | "coverage";
 
 type ProgramImport = CatalogueImport;
 
-const methodIcon = { json: FileJson, csv: FileSpreadsheet, url: Link2 };
-const methodColor = { json: "text-accent-blue", csv: "text-success", url: "text-primary" };
-const methodBg = { json: "bg-accent-blue/10", csv: "bg-success/10", url: "bg-primary/10" };
+const methodIcon = { json: FileJson, csv: FileSpreadsheet, url: Link2, coverage: Layers3 };
+const methodColor = { json: "text-accent-blue", csv: "text-success", url: "text-primary", coverage: "text-accent-cyan" };
+const methodBg = { json: "bg-accent-blue/10", csv: "bg-success/10", url: "bg-primary/10", coverage: "bg-accent-cyan/10" };
 
 export default function AdminProgramImports() {
   const [imports, setImports] = useState<ProgramImport[]>(getCatalogueImports);
