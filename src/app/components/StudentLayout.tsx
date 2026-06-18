@@ -13,7 +13,6 @@ import {
   SlidersHorizontal,
   Sparkles,
   UserRound,
-  WandSparkles,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -29,7 +28,6 @@ const navItems = [
   { path: "/browse", label: "Browse Universities", icon: Building2 },
   { path: "/smart-search", label: "Smart Search", icon: BrainCircuit },
   { path: "/student/recommendations", label: "Recommendations", icon: Sparkles },
-  { path: "/student/ai-recommendations", label: "AI Recommendations", icon: WandSparkles },
   { path: "/student/ai-assistant", label: "AI Assistant", icon: Bot },
   { path: "/student/saved", label: "Saved Programs", icon: Heart },
   { path: "/student/compare", label: "Compare Programs", icon: GitCompare },

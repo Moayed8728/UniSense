@@ -55,7 +55,7 @@ npm run build      # production build
 | 2.4 | Student | Recommendations | `/student/recommendations` | [src/app/pages/student/Recommendations.tsx](src/app/pages/student/Recommendations.tsx) |
 | 2.5 | Student | Study Preferences | `/student/preferences` | [src/app/pages/student/StudyPreferences.tsx](src/app/pages/student/StudyPreferences.tsx) |
 | 2.6 | Student | AI Assistant | `/student/ai-assistant` | [src/app/pages/student/AIAssistant.tsx](src/app/pages/student/AIAssistant.tsx) |
-| 2.7 | Student | AI Recommendations | `/student/ai-recommendations` | [src/app/pages/student/AIRecommendations.tsx](src/app/pages/student/AIRecommendations.tsx) |
+| 2.7 | Student | AI Recommendations Redirect | `/student/ai-recommendations` → `/student/recommendations` | [src/app/pages/student/Recommendations.tsx](src/app/pages/student/Recommendations.tsx) |
 
 ### 3 · Programme Discovery
 

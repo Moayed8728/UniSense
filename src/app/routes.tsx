@@ -24,7 +24,6 @@ import ComparePrograms from "./pages/student/ComparePrograms";
 import Recommendations from "./pages/student/Recommendations";
 import StudyPreferences from "./pages/student/StudyPreferences";
 import AIAssistant from "./pages/student/AIAssistant";
-import AIRecommendations from "./pages/student/AIRecommendations";
 
 // Program discovery pages
 import BrowsePrograms from "./pages/discover/Browse";
@@ -89,7 +88,7 @@ export const router = createBrowserRouter([
       { path: "recommendations", Component: Recommendations },
       { path: "preferences", Component: StudyPreferences },
       { path: "ai-assistant", Component: AIAssistant },
-      { path: "ai-recommendations", Component: AIRecommendations },
+      { path: "ai-recommendations", element: <Navigate to="/student/recommendations" replace /> },
     ],
   },
   {
